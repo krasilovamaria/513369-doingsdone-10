@@ -100,7 +100,7 @@ $show_complete_tasks = rand(0, 1);
                                 <li class="main-navigation__list-item">
                                     <a class="main-navigation__list-item-link" href="#"><?= $item; ?></a>
                                     <span class="main-navigation__list-item-count">
-                                        <?= count_tasks($tasks, $projects); /*вывоз функции подсчета задач*/?>
+                                        <?= count_tasks($tasks, 'Работа'); /*вывоз функции подсчета задач*/?>
                                     </span>
                                 </li>
                             <?php endforeach; ?>
