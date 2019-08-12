@@ -82,11 +82,26 @@ $show_complete_tasks = rand(0, 1);
                                     'completed' => 'Нет'
                                 ]
                             ];
+
+                            /* функция подсчета задач */
+                            function count_tasks(array $arr_tasks, string $project_name) {
+                                $tasks_amount = 0;
+
+                                foreach ($arr_tasks as $value) {
+                                    if ($value['category'] === $project_name) {
+                                        $tasks_amount += 1;
+                                    }
+                                }
+
+                                return $tasks_amount;
+                            }
                             ?>
-                            <?php foreach ($projects as $item) : /*добавляет список проектов из массива $titleproject*/?>
+                            <?php foreach ($projects as $item) : /*добавляет список проектов из массива $projects*/ ?>
                                 <li class="main-navigation__list-item">
                                     <a class="main-navigation__list-item-link" href="#"><?= $item; ?></a>
-                                    <span class="main-navigation__list-item-count">0</span>
+                                    <span class="main-navigation__list-item-count">
+                                        <?= count_tasks($tasks, $projects); /*вывоз функции подсчета задач*/?>
+                                    </span>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -114,32 +129,32 @@ $show_complete_tasks = rand(0, 1);
 
                         <label class="checkbox">
                             <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?= $show_complete_tasks === 1 ? 'checked' : ''
-                            /* добавлен атрибут "checked", если переменная $show_complete_tasks равна единице */?>>
+                                                                                                            /* добавлен атрибут "checked", если переменная $show_complete_tasks равна единице */ ?>>
                             <span class="checkbox__text">Показывать выполненные</span>
                         </label>
                     </div>
 
                     <table class="tasks">
-                    <?php foreach ($tasks as $item) : /*добавляет список задач из массива $tasks*/?>
-                        <?php if ($item['completed'] === 'Нет' || ($item['completed'] === 'Да' && $show_complete_tasks === 1)) :
-                            /*условие для отображения задач из массива $tasks тех что выполнены и невыполнены*/?>
-                            <tr class="tasks__item task <?= $item['completed'] === "Нет" ?: 'task--completed' /*добавляет класс task--completed*/?>">
-                                <td class="task__select">
-                                    <label class="checkbox task__checkbox">
-                                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1"<?= $item['completed'] === 'Да' ? ' checked': ''
-                                        /*добавляет атрибут "checked"*/?>>
-                                        <span class="checkbox__text"><?= $item['task']; ?></span>
-                                    </label>
-                                </td>
+                        <?php foreach ($tasks as $item) : /*добавляет список задач из массива $tasks*/ ?>
+                            <?php if ($item['completed'] === 'Нет' || ($item['completed'] === 'Да' && $show_complete_tasks === 1)) :
+                                /*условие для отображения задач из массива $tasks тех что выполнены и невыполнены*/ ?>
+                                <tr class="tasks__item task <?= $item['completed'] === "Нет" ?: 'task--completed' /*добавляет класс task--completed*/ ?>">
+                                    <td class="task__select">
+                                        <label class="checkbox task__checkbox">
+                                            <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= $item['completed'] === 'Да' ? ' checked' : ''
+                                                                                                                                    /*добавляет атрибут "checked"*/ ?>>
+                                            <span class="checkbox__text"><?= $item['task']; ?></span>
+                                        </label>
+                                    </td>
 
-                                <td class="task__file">
-                                    <a class="download-link" href="#">Home.psd</a>
-                                </td>
+                                    <td class="task__file">
+                                        <a class="download-link" href="#">Home.psd</a>
+                                    </td>
 
-                                <td class="task__date"><?= $item['date'] ?></td>
-                            </tr>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                                    <td class="task__date"><?= $item['date'] ?></td>
+                                </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
                     </table>
                 </main>
             </div>
