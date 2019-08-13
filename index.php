@@ -89,7 +89,7 @@ $show_complete_tasks = rand(0, 1);
 
                                 foreach ($arr_tasks as $value) {
                                     if ($value['category'] === $project_name) {
-                                        $tasks_amount += 1;
+                                        $tasks_amount++;
                                     }
                                 }
 
@@ -100,7 +100,7 @@ $show_complete_tasks = rand(0, 1);
                                 <li class="main-navigation__list-item">
                                     <a class="main-navigation__list-item-link" href="#"><?= $item; ?></a>
                                     <span class="main-navigation__list-item-count">
-                                        <?= count_tasks($tasks, 'Работа'); /*вывоз функции подсчета задач*/?>
+                                        <?= count_tasks($tasks, $item); /*вывоз функции подсчета задач*/?>
                                     </span>
                                 </li>
                             <?php endforeach; ?>
