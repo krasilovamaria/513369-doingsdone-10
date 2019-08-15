@@ -35,7 +35,7 @@
         </nav>
 
         <label class="checkbox">
-            <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?= $show_complete_tasks === 1 ? 'checked' : ''
+            <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?= htmlspecialchars($show_complete_tasks === 1) ? 'checked' : ''
             /* добавлен атрибут "checked", если переменная $show_complete_tasks равна единице */ ?>>
             <span class="checkbox__text">Показывать выполненные</span>
         </label>
@@ -48,7 +48,7 @@
         <tr class="tasks__item task <?= $item['completed'] === "Нет" ?: 'task--completed' /*добавляет класс task--completed*/ ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= $item['completed'] === 'Да' ? ' checked' : ''
+                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= htmlspecialchars($item['completed']) === 'Да' ? ' checked' : ''
                     /*добавляет атрибут "checked"*/ ?>>
                     <span class="checkbox__text"><?= htmlspecialchars(filter_text($item['task'])); ?></span>
                 </label>

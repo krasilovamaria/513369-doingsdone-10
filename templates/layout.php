@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?=htmlspecialchars($title); ?></title>
+    <title><?= htmlspecialchars($title); ?></title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
@@ -32,7 +32,7 @@
                 </div>
             </header>
 
-            <div class="content"><?$content;?></div>
+            <div class="content"><?=$content;?></div>
         </div>
     </div>
 
