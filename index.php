@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('Europe/Moscow');
+
 require_once('config/data.php');
 require_once('config/functions.php');
 require_once('helpers.php');
@@ -14,4 +16,3 @@ $layout_content = include_template('layout.php', [
 ]);
 
 print($layout_content);
-?>
