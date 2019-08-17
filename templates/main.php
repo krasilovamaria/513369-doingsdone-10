@@ -47,7 +47,7 @@
         <?php if ($item['completed'] === 'Нет' || ($item['completed'] === 'Да' && $show_complete_tasks === 1)) :
             /*условие для отображения задач из массива $tasks тех что выполнены и невыполнены*/ ?>
         <tr class="tasks__item task <?= $item['completed'] === "Нет" ?: 'task--completed' /*добавляет класс task--completed*/?>
-        <?= count_hours($item['date']) <= 24 ? 'task--important' : '' /*добавляет класс task--important*/ ?>">
+        <?= is_date_important($item['date']) ? 'task--important' : '' /*добавляет класс task--important*/ ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= $item['completed'] === 'Да' ? ' checked' : ''
