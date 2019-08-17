@@ -23,5 +23,5 @@ function is_date_important($date)
     $dt_diff = $date_ts - $current_time;
     $seconds_in_hour = 3600;
     $hours = floor($dt_diff / $seconds_in_hour);
-    return($hours <= 24 && $hours > 0 ? true : false);
+    return $hours <= 24 && $hours > 0;
 }
