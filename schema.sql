@@ -3,7 +3,7 @@ USE doingsdone;
 
 CREATE TABLE user (
   id       int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  date     datetime NOT NULL COMMENT 'DEAFAULT NOW()',
+  date     datetime NOT NULL DEFAULT NOW(),
   email    char(128) NOT NULL UNIQUE,
   name     char(128) NOT NULL,
   password varchar(128) NOT NULL
@@ -18,11 +18,11 @@ CREATE TABLE project (
 
 CREATE TABLE task (
   id         int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  date       datetime NOT NULL COMMENT 'DEFAULT NOW()',
-  status     tinyint(1) DEFAULT NULL,
+  date       datetime NOT NULL DEFAULT NOW(),
+  status     tinyint(1) DEFAULT 0,
   name       char(128) NOT NULL,
-  file       char(128) DEFAULT NULL,
-  deadline   datetime DEFAULT NULL,
+  file       char(128),
+  deadline   datetime,
   author_id  int(11) NOT NULL,
   project_id int(11) NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user(id),
