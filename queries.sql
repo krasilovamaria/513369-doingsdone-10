@@ -1,8 +1,9 @@
 /*Добавляет в таблицу user пользователей*/
+USE doingsdone;
 INSERT INTO user (email, name, password)
-VALUES ('angrybirds2@gmail.com'), ('Red'), ('angryRed'),
-       ('angrybirds@gmail.com'), ('PowerfulEagle'), ('angryEagle'),
-       ('angrybird2@gmail.com'), ('Alex'), ('angryAlex');
+VALUES ('angrybirds2@gmail.com', 'Red', 'angryRed'),
+       ('angrybirds@gmail.com', 'PowerfulEagle', 'angryEagle'),
+       ('angrybird2@gmail.com', 'Alex', 'angryAlex');
 
 /*Добавляет в таблицу project название проектов и автора*/
 INSERT INTO project (name, author_id)
@@ -15,8 +16,8 @@ VALUES (0, 'Собеседование в IT компании','18.08.2019', 3, 
        (0, 'Выполнить тестовое задание','20.08.2019', 3, 3),
        (1, 'Сделать задание первого раздела','21.12.2018', 2, 2),
        (0, 'Встреча с другом','22.12.2018', 1, 1),
-       (0, 'Купить корм для кота', 1, 4),
-       (0, 'Заказать пиццу', 1, 4);
+       (0, 'Купить корм для кота', NULL, 1, 4),
+       (0, 'Заказать пиццу', NULL, 1, 4);
 
 /*получает список из всех проектов для одного пользователя*/
 SELECT name FROM project WHERE author_id = 1;
