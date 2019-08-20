@@ -1,4 +1,6 @@
-CREATE DATABASE doingsdone CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE doingsdone
+  DEFAULT CHARACTER SET utf8
+  DEFAULT COLLATE utf8_general_ci;
 USE doingsdone;
 
 CREATE TABLE user (
