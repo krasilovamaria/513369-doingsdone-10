@@ -1,4 +1,7 @@
 <?php
+/*показывать или нет выполненные задачи*/
+$show_complete_tasks = rand(0, 1);
+
 /* подсчет задач */
 function count_tasks(array $arr_tasks, string $project_name)
 {
