@@ -13,16 +13,15 @@ $projects = [];
 $sql_projects = 'SELECT id, name FROM project';
 $result_projects = mysqli_query($connect, $sql_projects);
 if($result_projects) {
-    $projects = mysqli_fetch_all($sql_projects, MYSQLI_ASSOC);
+    $projects = mysqli_fetch_all($result_projects, MYSQLI_ASSOC);
 }
 
 /* массив задач и SQL-запрос для получения списка из всех задач у текущего пользователя */
 $tasks = [];
 $sql_tasks = 'SELECT id, name, file, deadline FROM task';
-var_dump($sql_tasks);
 $result_tasks = mysqli_query($connect, $sql_tasks);
 if($result_tasks) {
-    $tasks = mysqli_fetch_all($sql_tasks, MYSQLI_ASSOC);
+    $tasks = mysqli_fetch_all($result_tasks, MYSQLI_ASSOC);
 }
 
 $page_content = include_template('main.php', [

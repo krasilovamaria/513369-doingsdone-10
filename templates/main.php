@@ -8,7 +8,7 @@
                 <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($item['name']);
                 /* htmlspecialchars фильтрует данные, для защиты от XSS */?></a>
                 <span class="main-navigation__list-item-count">
-                    <?= htmlspecialchars(count_tasks($tasks, $item)); /*вывоз функции подсчета задач*/ ?>
+                    <?= htmlspecialchars(count_tasks($tasks, $item['name'])); /*вывоз функции подсчета задач*/ ?>
                 </span>
             </li>
             <?php endforeach; ?>
