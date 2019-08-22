@@ -44,15 +44,15 @@
 
     <table class="tasks">
         <?php foreach ($tasks as $item) : /*добавляет список задач из массива $tasks*/ ?>
-        <?php if ($item['completed'] === 'Нет' || ($item['completed'] === 'Да' && $show_complete_tasks === 1)) :
+        <?php if ($item['status'] === 'Нет' || ($item['status'] === 'Да' && $show_complete_tasks === 1)) :
             /*условие для отображения задач из массива $tasks тех что выполнены и невыполнены*/ ?>
-        <tr class="tasks__item task <?= $item['completed'] === "Нет" ?: 'task--completed' /*добавляет класс task--completed*/?>
-        <?= is_date_important($item['date']) ? 'task--important' : '' /*добавляет класс task--important*/ ?>">
+        <tr class="tasks__item task <?= $item['status'] === "Нет" ?: 'task--completed' /*добавляет класс task--completed*/?>
+        <?= is_date_important($item['deadline']) ? 'task--important' : '' /*добавляет класс task--important*/ ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= $item['completed'] === 'Да' ? ' checked' : ''
+                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= $item['status'] === 'Да' ? ' checked' : ''
                     /*добавляет атрибут "checked"*/ ?>>
-                    <span class="checkbox__text"><?= htmlspecialchars($item['task']); ?></span>
+                    <span class="checkbox__text"><?= htmlspecialchars($item['name']); ?></span>
                 </label>
             </td>
 
@@ -60,7 +60,7 @@
                 <a class="download-link" href="#">Home.psd</a>
             </td>
 
-            <td class="task__date"><?= htmlspecialchars($item['date']) ?></td>
+            <td class="task__date"><?= htmlspecialchars($item['deadline']) ?></td>
         </tr>
         <?php endif; ?>
         <?php endforeach; ?>

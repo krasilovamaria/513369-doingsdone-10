@@ -7,7 +7,7 @@ function count_tasks(array $arr_tasks, string $project_name)
 {
     $tasks_amount = 0;
     foreach ($arr_tasks as $value) {
-        if ($value['category'] === $project_name) {
+        if ($value['name'] === $project_name) {
             $tasks_amount++;
         }
     }
