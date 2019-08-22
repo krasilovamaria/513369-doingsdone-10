@@ -5,7 +5,7 @@ require_once('config/functions.php');
 require_once('helpers.php');
 
 /* подключение к БД и кодировка*/
-$connect = mysqli_connect('localhost', 'root', 'root', 'doingsdone');
+$connect = mysqli_connect('localhost:3366', 'root', 'rootpass', 'doingsdone');
 mysqli_set_charset($connect, 'utf8');
 
 /* массив проектов и SQL-запрос для получения списка проектов у текущего пользователя */
@@ -19,6 +19,7 @@ if($result_projects) {
 /* массив задач и SQL-запрос для получения списка из всех задач у текущего пользователя */
 $tasks = [];
 $sql_tasks = 'SELECT id, name, file, deadline FROM task';
+var_dump($sql_tasks);
 $result_tasks = mysqli_query($connect, $sql_tasks);
 if($result_tasks) {
     $tasks = mysqli_fetch_all($sql_tasks, MYSQLI_ASSOC);

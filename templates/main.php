@@ -3,9 +3,9 @@
 
     <nav class="main-navigation">
         <ul class="main-navigation__list">
-            <?php foreach ($projects as $item['name']) : /*добавляет список проектов из массива $projects*/ ?>
+            <?php foreach ($projects as $item) : /*добавляет список проектов из массива $projects*/ ?>
             <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($item);
+                <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($item['name']);
                 /* htmlspecialchars фильтрует данные, для защиты от XSS */?></a>
                 <span class="main-navigation__list-item-count">
                     <?= htmlspecialchars(count_tasks($tasks, $item)); /*вывоз функции подсчета задач*/ ?>
@@ -43,7 +43,7 @@
     </div>
 
     <table class="tasks">
-        <?php foreach ($tasks as $item['name']) : /*добавляет список задач из массива $tasks*/ ?>
+        <?php foreach ($tasks as $item) : /*добавляет список задач из массива $tasks*/ ?>
         <?php if ($item['completed'] === 'Нет' || ($item['completed'] === 'Да' && $show_complete_tasks === 1)) :
             /*условие для отображения задач из массива $tasks тех что выполнены и невыполнены*/ ?>
         <tr class="tasks__item task <?= $item['completed'] === "Нет" ?: 'task--completed' /*добавляет класс task--completed*/?>
