@@ -60,7 +60,7 @@
                 <a class="download-link" href="#">Home.psd</a>
             </td>
 
-            <td class="task__date"><?= htmlspecialchars($item['deadline']) ?></td>
+            <td class="task__date"><?= htmlspecialchars(date('d.m.Y', strtotime(($item['deadline'])))) ?></td>
         </tr>
         <?php endif; ?>
         <?php endforeach; ?>
