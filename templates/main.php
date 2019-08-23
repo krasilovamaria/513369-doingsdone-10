@@ -5,10 +5,10 @@
         <ul class="main-navigation__list">
             <?php foreach ($projects as $item) : /*добавляет список проектов из массива $projects*/ ?>
             <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($item);
+                <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($item['name']);
                 /* htmlspecialchars фильтрует данные, для защиты от XSS */?></a>
                 <span class="main-navigation__list-item-count">
-                    <?= htmlspecialchars(count_tasks($tasks, $item)); /*вывоз функции подсчета задач*/ ?>
+                    <?= htmlspecialchars(count_tasks($tasks, $item['id'])); /*вывоз функции подсчета задач*/ ?>
                 </span>
             </li>
             <?php endforeach; ?>
@@ -44,15 +44,15 @@
 
     <table class="tasks">
         <?php foreach ($tasks as $item) : /*добавляет список задач из массива $tasks*/ ?>
-        <?php if ($item['completed'] === 'Нет' || ($item['completed'] === 'Да' && $show_complete_tasks === 1)) :
+        <?php if ($item['status'] === '0' || ($item['status'] === '1' && $show_complete_tasks === 1)) :
             /*условие для отображения задач из массива $tasks тех что выполнены и невыполнены*/ ?>
-        <tr class="tasks__item task <?= $item['completed'] === "Нет" ?: 'task--completed' /*добавляет класс task--completed*/?>
-        <?= is_date_important($item['date']) ? 'task--important' : '' /*добавляет класс task--important*/ ?>">
+        <tr class="tasks__item task <?= $item['status'] === "0" ?: 'task--completed' /*добавляет класс task--completed*/?>
+        <?= is_date_important($item['deadline']) ? 'task--important' : '' /*добавляет класс task--important*/ ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= $item['completed'] === 'Да' ? ' checked' : ''
+                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= $item['status'] === '1' ? ' checked' : ''
                     /*добавляет атрибут "checked"*/ ?>>
-                    <span class="checkbox__text"><?= htmlspecialchars($item['task']); ?></span>
+                    <span class="checkbox__text"><?= htmlspecialchars($item['name']); ?></span>
                 </label>
             </td>
 
@@ -60,7 +60,7 @@
                 <a class="download-link" href="#">Home.psd</a>
             </td>
 
-            <td class="task__date"><?= htmlspecialchars($item['date']) ?></td>
+            <td class="task__date"><?= htmlspecialchars(date('d.m.Y', strtotime(($item['deadline'])))) ?></td>
         </tr>
         <?php endif; ?>
         <?php endforeach; ?>

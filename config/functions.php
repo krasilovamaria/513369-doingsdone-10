@@ -1,10 +1,13 @@
 <?php
+/*показывать или нет выполненные задачи*/
+$show_complete_tasks = rand(0, 1);
+
 /* подсчет задач */
-function count_tasks(array $arr_tasks, string $project_name)
+function count_tasks(array $arr_tasks, string $id)
 {
     $tasks_amount = 0;
     foreach ($arr_tasks as $value) {
-        if ($value['category'] === $project_name) {
+        if ($value['project_id'] === $id) {
             $tasks_amount++;
         }
     }
