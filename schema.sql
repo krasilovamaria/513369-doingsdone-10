@@ -31,9 +31,5 @@ CREATE TABLE task (
   FOREIGN KEY (project_id) REFERENCES project(id)
 );
 
-CREATE INDEX name ON user(name);
-CREATE INDEX name ON project(name);
-CREATE INDEX id ON user(id);
-CREATE INDEX id ON project(id);
 CREATE INDEX author_id ON project(author_id);
 CREATE INDEX project_id ON task(project_id);
