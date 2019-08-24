@@ -28,3 +28,27 @@ function is_date_important($date)
     $hours = floor($dt_diff / $seconds_in_hour);
     return $hours <= 24 && $hours > 0;
 }
+
+/* получает массив задач и SQL-запрос для отображения списка задач у текущего пользователя */
+function getTasks($connect)
+{
+    $sql = 'SELECT id, name, status, file, deadline, project_id FROM task';
+    $result = mysqli_query($connect, $sql);
+    if ($result === false) {
+        die("Ошибка при выполнении запроса '$sql'.<br> Текст ошибки: ".mysqli_error($connect));
+    }
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/* получает массив проектов и SQL-запрос для отображения списка проектов у текущего пользователя */
+function getProjects($connect)
+{
+    $sql = 'SELECT id, name FROM project';
+    $result = mysqli_query($connect, $sql);
+    if ($result === false) {
+        die("Ошибка при выполнении запроса '$sql'.<br> Текст ошибки: ".mysqli_error($connect));
+    }
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
