@@ -8,11 +8,23 @@ require_once('helpers.php');
 $connect = mysqli_connect('localhost:3366', 'root', 'rootpass', 'doingsdone');
 mysqli_set_charset($connect, 'utf8');
 
-/* получаем список проектов и задач*/
+/* получает список проектов и задач*/
 $projects = getProjects($connect);
 $tasks = getTasks($connect);
 
-/* имя пользователя */
+/* ссылки на задачи*/
+if(isset($_GET['project_id'])) {
+    $project_id = intval($_GET['project_id']);
+    $sql = 'SELECT id, name, status, file, deadline, project_id FROM task WHERE projct_id = ' . $project_id;
+    $result = mysqli_query($connect, $sql);
+    if($result) {
+        $row = mysqli_fetch_assoc($result);
+    }
+    $result = mysqli_query($connect, $sql);
+    header("Location: /index.php");
+}
+
+/* имя пользователя*/
 $user_name = 'Red';
 $page_content = include_template('main.php', [
     'projects' => $projects,
