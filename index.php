@@ -16,7 +16,6 @@ $tasks = getTasks($connect);
 if(isset($_GET['project_id'])) {
     $project_id = intval($_GET['project_id']);
     $sql = 'SELECT id, name, status, file, deadline, project_id FROM task WHERE projct_id = ' . $project_id;
-    $result = mysqli_query($connect, $sql);
     if($result) {
         $row = mysqli_fetch_assoc($result);
     }
