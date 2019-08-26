@@ -7,22 +7,22 @@ require_once('helpers.php');
 /* подключение к БД и кодировка*/
 $connect = mysqli_connect('localhost:3366', 'root', 'rootpass', 'doingsdone');
 mysqli_set_charset($connect, 'utf8');
-/* массив проектов и SQL-запрос для получения списка проектов у текущего пользователя */
-$projects = [];
-$sql_projects = 'SELECT id, name FROM project';
-$result_projects = mysqli_query($connect, $sql_projects);
-if($result_projects) {
-    $projects = mysqli_fetch_all($result_projects, MYSQLI_ASSOC);
+
+/* получает список проектов и задач*/
+/* если параметра нет, то NULL(показывает задачи как есть)*/
+$project_id = $_GET['project_id'] ?? null;
+$projects = getProjects($connect);
+/* если параметра запроса не существует, то 404*/
+if ($project_id === '') {
+    die('404');
 }
-/* массив задач и SQL-запрос для получения списка из всех задач у текущего пользователя */
-$tasks = [];
-$sql_tasks = 'SELECT id, name, status, file, deadline, project_id FROM task';
-$result_tasks = mysqli_query($connect, $sql_tasks);
-if($result_tasks) {
-    $tasks = mysqli_fetch_all($result_tasks, MYSQLI_ASSOC);
+$tasks = getTasks($connect, $project_id);
+/* если по id проекта не нашлось ни одной записи, то 404*/
+if (count($tasks) === 0) {
+    die('404');
 }
 
-/* Имя пользователя */
+/* имя пользователя*/
 $user_name = 'Red';
 $page_content = include_template('main.php', [
     'projects' => $projects,

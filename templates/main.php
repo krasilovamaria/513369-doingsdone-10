@@ -4,11 +4,12 @@
     <nav class="main-navigation">
         <ul class="main-navigation__list">
             <?php foreach ($projects as $item) : /*добавляет список проектов из массива $projects*/ ?>
-            <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($item['name']);
-                /* htmlspecialchars фильтрует данные, для защиты от XSS */?></a>
+            <li class="main-navigation__list-item<?= isProjectsMenuItemActive($item['project_id']) /*выделяет активный проект*/?>">
+                <a class="main-navigation__list-item-link" href="index.php?project_id=<?=$item['id']; /*добавляет адрес ссылки*/?>">
+                <?= htmlspecialchars($item['name']);
+                /* htmlspecialchars фильтрует данные, для защиты от XSS */ ?></a>
                 <span class="main-navigation__list-item-count">
-                    <?= htmlspecialchars(count_tasks($tasks, $item['id'])); /*вывоз функции подсчета задач*/ ?>
+                    <?= htmlspecialchars($item['projects_count']); /*подсчет задач через SQL*/ ?>
                 </span>
             </li>
             <?php endforeach; ?>
@@ -45,8 +46,8 @@
     <table class="tasks">
         <?php foreach ($tasks as $item) : /*добавляет список задач из массива $tasks*/ ?>
         <?php if ($item['status'] === '0' || ($item['status'] === '1' && $show_complete_tasks === 1)) :
-            /*условие для отображения задач из массива $tasks тех что выполнены и невыполнены*/ ?>
-        <tr class="tasks__item task <?= $item['status'] === "0" ?: 'task--completed' /*добавляет класс task--completed*/?>
+        /*условие для отображения задач из массива $tasks тех что выполнены и невыполнены*/ ?>
+        <tr class="tasks__item task <?= $item['status'] === "0" ?: 'task--completed' /*добавляет класс task--completed*/ ?>
         <?= is_date_important($item['deadline']) ? 'task--important' : '' /*добавляет класс task--important*/ ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
@@ -60,7 +61,11 @@
                 <a class="download-link" href="#">Home.psd</a>
             </td>
 
-            <td class="task__date"><?= htmlspecialchars(date('d.m.Y', strtotime(($item['deadline'])))) ?></td>
+            <td class="task__date">
+                <?php if (isset($item['deadline'])) :/*проверяет на NULL*/?>
+                <?= htmlspecialchars(date('d.m.Y', strtotime(($item['deadline'])))) ?>
+                <?php endif; ?>
+            </td>
         </tr>
         <?php endif; ?>
         <?php endforeach; ?>
