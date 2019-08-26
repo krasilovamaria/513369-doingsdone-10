@@ -9,18 +9,18 @@ $connect = mysqli_connect('localhost:3366', 'root', 'rootpass', 'doingsdone');
 mysqli_set_charset($connect, 'utf8');
 
 /* получает список проектов и задач*/
+/* если параметра нет, то NULL(показывает задачи как есть)*/
+$project_id = $_GET['project_id'] ?? null;
 $projects = getProjects($connect);
-$tasks = getTasks($connect);
 
-/* ссылки на задачи*/
-if(isset($_GET['project_id'])) {
-    $project_id = intval($_GET['project_id']);
-    $sql = 'SELECT id, name, status, file, deadline, project_id FROM task WHERE projct_id = ' . $project_id;
-    if($result) {
-        $row = mysqli_fetch_assoc($result);
-    }
-    $result = mysqli_query($connect, $sql);
-    header("Location: /index.php");
+/* если параметра запроса не существует, то 404.*/
+if ($project_id === '') {
+    die('404');
+}
+$tasks = getTasks($connect, $project_id);
+/* если по id проекта не нашлось ни одной записи, то 404.*/
+if (count($tasks) === 0) {
+    die('404');
 }
 
 /* имя пользователя*/

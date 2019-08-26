@@ -4,12 +4,12 @@
     <nav class="main-navigation">
         <ul class="main-navigation__list">
             <?php foreach ($projects as $item) : /*добавляет список проектов из массива $projects*/ ?>
-            <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link" href="main.php?project_id=<?=$item['id']; /*добавляет адрес ссылки*/?>">
+            <li class="main-navigation__list-item<?= isProjectsMenuItemActive($item['project_id']) /*выделяет активный проект*/?>">
+                <a class="main-navigation__list-item-link" href="index.php?project_id=<?=$item['id']; /*добавляет адрес ссылки*/?>">
                 <?= htmlspecialchars($item['name']);
                 /* htmlspecialchars фильтрует данные, для защиты от XSS */ ?></a>
                 <span class="main-navigation__list-item-count">
-                    <?= htmlspecialchars(count_tasks($tasks, $item['id'])); /*вывоз функции подсчета задач*/ ?>
+                    <?= htmlspecialchars($item['projects_count']); /*вывоз функции подсчета задач*/ ?>
                 </span>
             </li>
             <?php endforeach; ?>
