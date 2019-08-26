@@ -19,7 +19,8 @@ if ($project_id === '') {
 $tasks = getTasks($connect, $project_id);
 /* если по id проекта не нашлось ни одной записи, то 404*/
 if (count($tasks) === 0) {
-    die('404');
+    $error = mysqli_connect_error();
+    print $page_content = include_template('error.php', ['error' => $error]);
 }
 
 /* имя пользователя*/
@@ -34,5 +35,5 @@ $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'title' => 'Дела в порядке - Главная страница'
 ]);
-
 print($layout_content);
+
