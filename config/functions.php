@@ -2,19 +2,6 @@
 /*показывать или нет выполненные задачи*/
 $show_complete_tasks = rand(0, 1);
 
-/* подсчет задач */
-function count_tasks(array $arr_tasks, string $id)
-{
-    $tasks_amount = 0;
-    foreach ($arr_tasks as $value) {
-        if ($value['project_id'] === $id) {
-            $tasks_amount++;
-        }
-    }
-
-    return $tasks_amount;
-}
-
 /* считает часы до даты */
 function is_date_important($date)
 {
@@ -30,11 +17,11 @@ function is_date_important($date)
 }
 
 /* получает массив задач и SQL-запрос для отображения списка задач у текущего пользователя */
-function getTasks($connect, $project_id = NULL)
+function getTasks($connect, $project_id = null)
 {
     $sql = 'SELECT id, name, status, file, deadline, project_id FROM task';
 
-    if ($project_id !== NULL) {
+    if ($project_id !== null) {
         $sql .= ' WHERE project_id = ' . mysqli_real_escape_string($connect, $project_id) /* чтобы не было SQL-инъекций*/;
     }
 
@@ -61,7 +48,7 @@ function getProjects($connect)
 }
 
 /* выделяет активный проект*/
-function isProjectsMenuItemActive($project_id)
+function getProjectsMenuActiveItemClass($project_id)
 {
     if (isset($_GET['project_id']) && $_GET['project_id'] === $project_id) {
         return ' main-navigation__list-item--active';

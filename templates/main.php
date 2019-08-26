@@ -4,7 +4,7 @@
     <nav class="main-navigation">
         <ul class="main-navigation__list">
             <?php foreach ($projects as $item) : /*добавляет список проектов из массива $projects*/ ?>
-            <li class="main-navigation__list-item<?= isProjectsMenuItemActive($item['project_id']) /*выделяет активный проект*/?>">
+            <li class="main-navigation__list-item<?= getProjectsMenuActiveItemClass($item['project_id']) /*выделяет активный проект*/?>">
                 <a class="main-navigation__list-item-link" href="index.php?project_id=<?=$item['id']; /*добавляет адрес ссылки*/?>">
                 <?= htmlspecialchars($item['name']);
                 /* htmlspecialchars фильтрует данные, для защиты от XSS */ ?></a>
@@ -62,7 +62,7 @@
             </td>
 
             <td class="task__date">
-                <?php if (isset($item['deadline'])) :/*проверяет на NULL*/?>
+                <?php if (isset($item['deadline'])) :/*проверяет на null*/?>
                 <?= htmlspecialchars(date('d.m.Y', strtotime(($item['deadline'])))) ?>
                 <?php endif; ?>
             </td>
