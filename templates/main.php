@@ -9,7 +9,7 @@
                 <?= htmlspecialchars($item['name']);
                 /* htmlspecialchars фильтрует данные, для защиты от XSS */ ?></a>
                 <span class="main-navigation__list-item-count">
-                    <?= htmlspecialchars($item['projects_count']); /*вывоз функции подсчета задач*/ ?>
+                    <?= htmlspecialchars($item['projects_count']); /*подсчет задач через SQL*/ ?>
                 </span>
             </li>
             <?php endforeach; ?>

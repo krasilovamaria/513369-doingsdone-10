@@ -12,13 +12,12 @@ mysqli_set_charset($connect, 'utf8');
 /* если параметра нет, то NULL(показывает задачи как есть)*/
 $project_id = $_GET['project_id'] ?? null;
 $projects = getProjects($connect);
-
-/* если параметра запроса не существует, то 404.*/
+/* если параметра запроса не существует, то 404*/
 if ($project_id === '') {
     die('404');
 }
 $tasks = getTasks($connect, $project_id);
-/* если по id проекта не нашлось ни одной записи, то 404.*/
+/* если по id проекта не нашлось ни одной записи, то 404*/
 if (count($tasks) === 0) {
     die('404');
 }
