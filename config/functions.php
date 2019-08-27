@@ -55,3 +55,24 @@ function getProjectsMenuActiveItemClass($project_id)
     }
     return '';
 }
+
+/* подключает not_found.php*/
+function print404Page($user_name, $projects, $show_complete_tasks)
+{
+    http_response_code(404);
+
+    $page_content = include_template('main.php', [
+        'projects' => $projects,
+        'show_complete_tasks' => $show_complete_tasks,
+        'content' => include_template('not_found.php')
+    ]);
+
+    $layout_content = include_template('layout.php', [
+        'user' => $user_name,
+        'content' => $page_content,
+        'title' => 'Дела в порядке - Главная страница'
+    ]);
+    print($layout_content);
+
+    exit();
+}
