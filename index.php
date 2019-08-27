@@ -1,20 +1,5 @@
 <?php
-date_default_timezone_set('Europe/Moscow');
-
-require_once('config/functions.php');
-require_once('helpers.php');
-
-/* подключение к БД и кодировка*/
-$connect = mysqli_connect('localhost:3366', 'root', 'rootpass', 'doingsdone');
-mysqli_set_charset($connect, 'utf8');
-
-/* получает список проектов и задач*/
-/* если параметра нет, то NULL(показывает задачи как есть)*/
-$project_id = $_GET['project_id'] ?? null;
-$projects = getProjects($connect);
-
-/* имя пользователя*/
-$user_name = 'Red';
+require_once('config/init.php');
 
 /* если параметра запроса не существует, то 404*/
 if ($project_id === '') {
