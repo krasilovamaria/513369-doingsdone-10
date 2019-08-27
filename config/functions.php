@@ -76,3 +76,34 @@ function print404Page($user_name, $projects, $show_complete_tasks)
 
     exit();
 }
+
+/* проверяет в форме поле name*/
+function validateFilled($name) {
+    if (empty($_POST[$name])) {
+        return "Это поле должно быть заполнено";
+    }
+
+    return null;
+}
+
+/* проверяет совпадает ли категория проекта с полем project*/
+function validateCategory($project, $allowed_list) {
+    $id = $_POST[$project];
+
+    if (!in_array($id, $allowed_list)) {
+        return "Указана несуществующая категория";
+    }
+
+    return null;
+}
+
+/* проверяет длину строки поля name*/
+function validateLength($name, $min, $max) {
+    $len = strlen($_POST[$name]);
+
+    if ($len < $min or $len > $max) {
+        return "Значение должно быть от $min до $max символов";
+    }
+
+    return null;
+}
