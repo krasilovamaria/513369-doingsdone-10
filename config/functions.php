@@ -89,7 +89,9 @@ function validateFilled($name) {
 /* проверяет совпадает ли категория проекта с полем project*/
 function validateCategory($project, $allowed_list) {
     $id = $_POST[$project];
-
+    if(empty($id)) {
+        exit();
+    }
     if (!in_array($id, $allowed_list)) {
         return "Указана несуществующая категория";
     }
@@ -100,6 +102,9 @@ function validateCategory($project, $allowed_list) {
 /* проверяет длину строки поля name*/
 function validateLength($name, $min, $max) {
     $len = strlen($_POST[$name]);
+    if(empty($len)) {
+        exit();
+    }
 
     if ($len < $min or $len > $max) {
         return "Значение должно быть от $min до $max символов";

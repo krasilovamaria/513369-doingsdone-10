@@ -1,6 +1,14 @@
 <?php
 require_once('config/init.php');
 
+/* получает список проектов*/
+/* если параметра нет, то NULL(показывает задачи как есть)*/
+$project_id = $_GET['project_id'] ?? null;
+$projects = getProjects($connect);
+
+/* получает список задач*/
+$tasks = getTasks($connect, $project_id);
+
 /* если параметра запроса не существует, то 404*/
 if ($project_id === '') {
     print404Page($user_name, $projects, $show_complete_tasks);
