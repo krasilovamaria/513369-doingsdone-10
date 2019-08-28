@@ -6,6 +6,16 @@ require_once('config/init.php');
 $project_id = $_GET['project_id'] ?? null;
 $projects = getProjects($connect);
 
+$task = [
+    'name' => $_POST['name'] ?? null,
+    'project' => $_POST['project'] ?? null,
+    'date' => $_POST['date'] ?? null,
+    'file' => $_POST['file'] ?? null
+];
+
+$errors = [];
+$data = [];
+
 /* получает список задач*/
 $tasks = getTasks($connect, $project_id);
 
@@ -14,8 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $projects = getProjects($connect);
     $project_ids = array_column($projects, 'id');
     $required = ['name', 'project_id'];
-    $errors = [];
-    $data = [];
 
     /* проверяет $project и $name*/
     $rules = [
@@ -25,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'name' => function () {
             return validateLength('name', 1, 20);
         },
-        'name' => function() {
-            return validateFilled('name');
+        'date' => function () {
+            return validateDate('date');
         }
     ];
 
@@ -39,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* отфильтровывает массив от пустых значений, чтобы оставить только ошибки*/
     foreach ($_POST as $key => $value) {
-        if (isset($rules[$key])) {
+        if (!isset($errors[$key] && isset($rules[$key]))) {
             $rule = $rules[$key];
             $errors[$key] = $rule();
         }
@@ -47,25 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $errors = array_filter($errors);
 
-    /* проверяет дату, если она заполнена*/
-    if(!empty($_POST['date'])) {
-        $currentDate = date('Y-m-d');
-        /* проверяет формат даты с помощью функции is_date_valid в helpers*/
-        if(!is_date_valid($_POST['date'])) {
-            $errors['date'] = 'Неверный формат даты';
-        }
-        /* проверяет меньше ли дата текущей даты*/
-        elseif (strtotime($_POST['date']) <= $currentDate) {
-            $errors['date'] = 'Дата не может быть меньше текущей';
-        }
-        /* если все ок записывает в переменную*/
-        else {
-            $data['date'] = '' . $_POST['date'] . '';
-        }
-    }
-
     /* проверяет загружен ли файл*/
-    if (isset($_FILES['file']['name'])) {
+    if (isset($_FILES['file']['error']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+
         /* дает возможность загрузить файл, если нет ошибок, если есть отменяет загрузку файла*/
         if (!empty($errors)) {
             $errors['file'] = 'Файл будет отправлен только после заполнения всех обязательных полей';
@@ -73,36 +65,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $file_name = $_FILES['file']['name'];
         $uniq_name = uniqid($file_name);
-        $file_path = $_SERVER['DOCUMENT_ROOT'] . '/uploads';
+        $file_path = $_SERVER['DOCUMENT_ROOT'] . '/uploads/';
         $data['file_url'] = '/uploads/' . $uniq_name;
         move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $uniq_name);
+
+    } else if (isset($_FILES['file']['error']) && $_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $errors['file'] = 'Не удалось загрузить файл';
     }
 
-    /* проверяем массив с ошибками, если он не пустой значит показываем их пользователю,
-     если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
-    if(count($errors)) {
-        $page_content = include_template('add.php', ['errors' => $errors]);
-    } else {
-        $sql = 'INSERT INTO tasks (id, date, status, name, file, deadline, author_id, project_id)
-                VALUES (?, NOW(), 0, ?, ?, ?, ?, ?)';
-        $stmt = db_get_prepare_stmt($connect, $sql, $tasks);
-        $res = mysqli_stmt_execute($stmt);
-        if($res) {
-            $task_id = mysqli_insert_id($link);
-
-            header("Location: index.php?id=" . $task_id);
-        } else {
-            $page_content = include_template('add.php', ['projects' => $projects]);
-        }
-    }
+    /* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
+    если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
+    getErrors($errors, $connect, $task);
 }
 
 /* подключение контента*/
 $page_content = include_template('add_main.php', [
     'projects' => $projects,
-    'content' => include_template('table_tasks.php', [
-        'tasks' => $tasks
-    ])
+    'errors'  => $errors
 ]);
 
 $layout_content = include_template('layout.php', [

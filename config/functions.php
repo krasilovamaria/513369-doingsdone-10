@@ -77,21 +77,15 @@ function print404Page($user_name, $projects, $show_complete_tasks)
     exit();
 }
 
-/* проверяет в форме поле name*/
-function validateFilled($name) {
-    if (empty($_POST[$name])) {
-        return "Это поле должно быть заполнено";
-    }
-
-    return null;
-}
-
 /* проверяет совпадает ли категория проекта с полем project*/
-function validateCategory($project, $allowed_list) {
+function validateCategory($project, $allowed_list)
+{
     $id = $_POST[$project];
-    if(empty($id)) {
-        exit();
+
+    if (empty($id)) {
+        return null;
     }
+
     if (!in_array($id, $allowed_list)) {
         return "Указана несуществующая категория";
     }
@@ -100,10 +94,12 @@ function validateCategory($project, $allowed_list) {
 }
 
 /* проверяет длину строки поля name*/
-function validateLength($name, $min, $max) {
+function validateLength($name, $min, $max)
+{
     $len = strlen($_POST[$name]);
-    if(empty($len)) {
-        exit();
+
+    if (empty($len)) {
+        return null;
     }
 
     if ($len < $min or $len > $max) {
@@ -111,4 +107,47 @@ function validateLength($name, $min, $max) {
     }
 
     return null;
+}
+
+/* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
+если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
+function getErrors($errors, $connect, $task)
+{
+    if (count($errors) > 0) {
+        $page_content = include_template('add.php', ['errors' => $errors]);
+    } else {
+        $sql = 'INSERT INTO tasks (id, date, status, name, file, deadline, author_id, project_id)
+                VALUES (?, NOW(), 0, ?, ?, ?, 1, ?)';
+        $stmt = db_get_prepare_stmt($connect, $sql, [$task['name'], $task['file'], $task['date'], $task['project']]);
+        $res = mysqli_stmt_execute($stmt);
+
+        if ($res) {
+            $task_id = mysqli_insert_id($connect);
+
+            header("Location: index.php?id=" . $task_id);
+            exit();
+        }
+    }
+}
+
+/* проверяет дату в форме*/
+function validateDate($date)
+{
+    $date = $_POST['date'];
+    /* проверяет дату, если она заполнена*/
+    if (!empty($date)) {
+        $currentDate = date('Y-m-d');
+        /* проверяет формат даты с помощью функции is_date_valid в helpers*/
+        if (!is_date_valid($date)) {
+           return 'Неверный формат даты';
+        }
+        /* проверяет меньше ли дата текущей даты*/
+        elseif (strtotime($date) <= $currentDate) {
+            return 'Дата не может быть меньше текущей';
+        }
+        /* если все ок записывает в переменную*/
+        else {
+            return $date['date'] = $date;
+        }
+    }
 }
