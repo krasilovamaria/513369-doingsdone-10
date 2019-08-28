@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* отфильтровывает массив от пустых значений, чтобы оставить только ошибки*/
     foreach ($_POST as $key => $value) {
-        if (!isset($errors[$key] && isset($rules[$key]))) {
+        if (!isset($errors[$key]) && isset($rules[$key])) {
             $rule = $rules[$key];
             $errors[$key] = $rule();
         }
