@@ -15,23 +15,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_ids = array_column($projects, 'id');
     $required = ['name', 'project_id'];
     $errors = [];
+    $data = [];
 
+    /* проверяет $project и $name*/
     $rules = [
         'project_id' => function () use ($project_ids) {
             return validateCategory('project_id', $project_ids);
         },
         'name' => function () {
             return validateLength('name', 1, 20);
+        },
+        'name' => function() {
+            return validateFilled('name');
         }
     ];
 
+    /* проверяет, что обязательный поля заполнены*/
     foreach ($required as $key) {
         if (empty($_POST[$key])) {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
 
-    /* отфильтровывем массив от пустых значений, чтобы оставить только ошибки*/
+    /* отфильтровывает массив от пустых значений, чтобы оставить только ошибки*/
     foreach ($_POST as $key => $value) {
         if (isset($rules[$key])) {
             $rule = $rules[$key];
@@ -41,9 +47,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $errors = array_filter($errors);
 
+    /* проверяет дату, если она заполнена*/
+    if(!empty($_POST['date'])) {
+        $currentDate = date('Y-m-d');
+        /* проверяет формат даты с помощью функции is_date_valid в helpers*/
+        if(!is_date_valid($_POST['date'])) {
+            $errors['date'] = 'Неверный формат даты';
+        }
+        /* проверяет меньше ли дата текущей даты*/
+        elseif (strtotime($_POST['date']) <= $currentDate) {
+            $errors['date'] = 'Дата не может быть меньше текущей';
+        }
+        /* если все ок записывает в переменную*/
+        else {
+            $data['date'] = '' . $_POST['date'] . '';
+        }
+    }
+
+    /* проверяет загружен ли файл*/
     if (isset($_FILES['file']['name'])) {
+        /* дает возможность загрузить файл, если нет ошибок, если есть отменяет загрузку файла*/
         if (!empty($errors)) {
-            $errors['file'] = "Файл отправляетя после заполнения всех обязательных полей";
+            $errors['file'] = 'Файл будет отправлен только после заполнения всех обязательных полей';
         }
 
         $file_name = $_FILES['file']['name'];
@@ -53,8 +78,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $uniq_name);
     }
 
-    if (count($errors)) {
+    /* проверяем массив с ошибками, если он не пустой значит показываем их пользователю,
+     если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
+    if(count($errors)) {
         $page_content = include_template('add.php', ['errors' => $errors]);
+    } else {
+        $sql = 'INSERT INTO tasks (id, date, status, name, file, deadline, author_id, project_id)
+                VALUES (?, NOW(), 0, ?, ?, ?, ?, ?)';
+        $stmt = db_get_prepare_stmt($connect, $sql, $tasks);
+        $res = mysqli_stmt_execute($stmt);
+        if($res) {
+            $task_id = mysqli_insert_id($link);
+
+            header("Location: index.php?id=" . $task_id);
+        } else {
+            $page_content = include_template('add.php', ['projects' => $projects]);
+        }
     }
 }
 
