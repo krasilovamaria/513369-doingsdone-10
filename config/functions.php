@@ -111,13 +111,11 @@ function validateLength($name, $min, $max)
 
 /* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
 если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
-function getErrors($errors, $connect, $task)
+function saveTaskAndRedirect($errors, $connect, $task)
 {
-    if (count($errors) > 0) {
-        $page_content = include_template('add.php', ['errors' => $errors]);
-    } else {
-        $sql = 'INSERT INTO tasks (id, date, status, name, file, deadline, author_id, project_id)
-                VALUES (?, NOW(), 0, ?, ?, ?, 1, ?)';
+    if (count($errors) === 0) {
+        $sql = 'INSERT INTO task (date, status, name, file, deadline, author_id, project_id)
+                VALUES (NOW(), 0, ?, ?, ?, 1, ?)';
         $stmt = db_get_prepare_stmt($connect, $sql, [$task['name'], $task['file'], $task['date'], $task['project']]);
         $res = mysqli_stmt_execute($stmt);
 
@@ -142,9 +140,9 @@ function validateDate($date)
            return 'Неверный формат даты';
         }
         /* проверяет меньше ли дата текущей даты*/
-        elseif (strtotime($date) <= $currentDate) {
+        if (strtotime($date) <= $currentDate) {
             return 'Дата не может быть меньше текущей';
         }
     }
-    return $date /* не знаю что здесь должно быть*/;
+    return null; /* не знаю что здесь должно быть*/
 }
