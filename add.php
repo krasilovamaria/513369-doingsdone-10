@@ -5,6 +5,8 @@ require_once('config/init.php');
 /* если параметра нет, то NULL(показывает задачи как есть)*/
 $project_id = $_GET['project_id'] ?? null;
 $projects = getProjects($connect);
+/* получает список задач*/
+$tasks = getTasks($connect, $project_id);
 
 $task = [
     'name' => $_POST['name'] ?? null,
@@ -15,9 +17,6 @@ $task = [
 
 $errors = [];
 $data = [];
-
-/* получает список задач*/
-$tasks = getTasks($connect, $project_id);
 
 /* валидация формы*/
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

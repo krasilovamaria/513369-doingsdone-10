@@ -145,9 +145,6 @@ function validateDate($date)
         elseif (strtotime($date) <= $currentDate) {
             return 'Дата не может быть меньше текущей';
         }
-        /* если все ок записывает в переменную*/
-        else {
-            return $date['date'] = $date;
-        }
     }
+    return $date /* не знаю что здесь должно быть*/;
 }
