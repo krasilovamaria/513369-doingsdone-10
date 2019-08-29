@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     /* проверяет $project и $name*/
     $rules = [
         'project' => function () use ($project_ids) {
-            return validateCategory('project_id', $project_ids);
+            return validateCategory('project', $project_ids);
         },
         'name' => function () {
             return validateLength('name', 1, 20);

@@ -144,5 +144,5 @@ function validateDate($date)
             return 'Дата не может быть меньше текущей';
         }
     }
-    return null; /* не знаю что здесь должно быть*/
+    return null;
 }
