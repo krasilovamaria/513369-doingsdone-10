@@ -20,37 +20,43 @@ $errors = [];
 /* валидация формы*/
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_ids = array_column($projects, 'id');
-    $required = ['name', 'project'];
 
-    /* проверяет $project и $name*/
-    $rules = [
-        'project' => function () use ($project_ids) {
-            return validateCategory('project', $project_ids);
-        },
-        'name' => function () {
-            return validateLength('name', 1, 20);
-        },
-        'date' => function () {
-            return validateDate('date');
-        }
-    ];
+    // проверяем поле Название на валидность
+    if (isset($_POST['name']) && trim($_POST['name']) !== '') {
+        // вырезаем по краям Названия пробелы
+        $name = trim($_POST['name']);
 
-    /* проверяет, что обязательный поля заполнены*/
-    foreach ($required as $key) {
-        if (empty($_POST[$key])) {
-            $errors[$key] = 'Это поле надо заполнить';
+        // пользователь указал Название, выполняем проверку на длину
+        // вычисляем длину строки, принимая во внимание кодировку,
+        // функция strlen вернет неверную длину строки для кириллических символов
+        if (mb_strlen($name, 'UTF-8') > 20) {
+            $errors['name'] = 'Название не должно превышать 20 символов.';
+        } else {
+            // Название валидно
+            $task['name'] = $name;
         }
+    } else {
+        // пользователь не ввел Названия вообще
+        $errors['name'] = 'Заполните это поле.';
     }
 
-    /* отфильтровывает массив от пустых значений, чтобы оставить только ошибки*/
-    foreach ($_POST as $key => $value) {
-        if (!isset($errors[$key]) && isset($rules[$key])) {
-            $rule = $rules[$key];
-            $errors[$key] = $rule();
-        }
-    }
+    // проверяем поле Проект
+    if (isset($_POST['project']) && trim($_POST['project']) !== '') {
+        // приводим строку к типу integer, т.к. мы ожидаем получить id проекта, а не его название
+        $project = intval($_POST['project']);
 
-    $errors = array_filter($errors);
+        // проверяем входит ли данный проект в список допустимых для данного пользователя
+        if (array_search($project, $project_ids) === false) {
+            // не входит в список допустимых
+            $errors['project'] = 'Указан несуществующий проект.';
+        } else {
+            // Проект валиден
+            $task['project'] = $project;
+        }
+    } else {
+        // поле Проект оказалось невыбранным
+        $errors['project'] = 'Заполните это поле.';
+    }
 
     /* проверяет загружен ли файл*/
     if (isset($_FILES['file']['error']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
