@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return validateCategory('project', $project_ids);
         },
         'name' => function () {
-            return validateLength('name', 1, 20);
+            return validateLength('name', 1, 100);
         },
         'date' => function () {
             return validateDate('date');
@@ -60,10 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors['file'] = 'Файл будет отправлен только после заполнения всех обязательных полей';
         } else {
             $file_name = $_FILES['file']['name'];
-            $uniq_name = uniqid() . $file_name;
-            $file_path = $_SERVER['DOCUMENT_ROOT'] . '/uploads/';
-            $task['file'] = '/uploads/' . $uniq_name;
-            move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $uniq_name);
+            $tmp_name = $_FILES['file']['tmp_name'];
+            $file_path = __DIR__ . '/uploads/';
+            $file_url  = '/uploads/' . $file_name;
+            move_uploaded_file($tmp_name, $file_path . $file_name);
+            $task['file'] = $file_name;
         }
 
     } else if (isset($_FILES['file']['error']) && $_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {

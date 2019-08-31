@@ -13,7 +13,9 @@
         </td>
 
         <td class="task__file">
-            <a class="download-link" href="#">Home.psd</a>
+        <?php if(isset($item['file'])) : ?>
+            <a class="download-link" href="<?= $item['file'];?>"><?= $item['file'];?></a>
+        <?php endif; ?>
         </td>
 
         <td class="task__date">
