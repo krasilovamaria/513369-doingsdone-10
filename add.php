@@ -59,14 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($errors)) {
             $errors['file'] = 'Файл будет отправлен только после заполнения всех обязательных полей';
         } else {
-            $file_name = $_FILES['file']['name'];
+            $file_name = uniqid() . $_FILES['file']['name'];
             $tmp_name = $_FILES['file']['tmp_name'];
             $file_path = __DIR__ . '/uploads/';
-            $file_url  = '/uploads/' . $file_name;
-            move_uploaded_file($tmp_name, $file_path . $file_name);
+            $file_url = '/uploads' . $file_name;
             $task['file'] = $file_name;
+            move_uploaded_file($tmp_name, $file_path . $file_name);
         }
-
     } else if (isset($_FILES['file']['error']) && $_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
         $errors['file'] = 'Не удалось загрузить файл';
     }
