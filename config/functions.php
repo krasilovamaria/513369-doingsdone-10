@@ -140,7 +140,7 @@ function validateDate($date)
            return 'Неверный формат даты';
         }
         /* проверяет меньше ли дата текущей даты*/
-        if (strtotime($date) <= $currentDate) {
+        if (strtotime($date) <= strtotime($currentDate)) {
             return 'Дата не может быть меньше текущей';
         }
     }

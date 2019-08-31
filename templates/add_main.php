@@ -39,10 +39,10 @@
             <select class="form__input form__input--select <?php if (!empty($errors['project'])) : ?>
              form__input--error <?php endif?>" name="project" id="project">
                 <?php foreach ($projects as $item) : /*добавляет список проектов из массива $projects*/ ?>
-                <option value="$item['id']"><?= htmlspecialchars($item['name']); ?></option>
+                <option value="<?php $item['id'] ?>"><?= htmlspecialchars($item['name']); ?></option>
+                <?php if (!empty($errors['project'])) : ?><p class="form__message"><?= $errors['project'] ?></p><?php endif?>
                 <?php endforeach; ?>
             </select>
-            <?php if (!empty($errors['project'])) : ?> <p class="form__message"><?= $errors['project'] ?></p> <?php endif ?>
         </div>
 
         <div class="form__row">
