@@ -55,3 +55,94 @@ function getProjectsMenuActiveItemClass($project_id)
     }
     return '';
 }
+
+/* подключает not_found.php*/
+function print404Page($user_name, $projects, $show_complete_tasks)
+{
+    http_response_code(404);
+
+    $page_content = include_template('main.php', [
+        'projects' => $projects,
+        'show_complete_tasks' => $show_complete_tasks,
+        'content' => include_template('not_found.php')
+    ]);
+
+    $layout_content = include_template('layout.php', [
+        'user' => $user_name,
+        'content' => $page_content,
+        'title' => 'Дела в порядке - Главная страница'
+    ]);
+    print($layout_content);
+
+    exit();
+}
+
+/* проверяет совпадает ли категория проекта с полем project*/
+function validateCategory($project, $allowed_list)
+{
+    $id = $_POST[$project];
+
+    if (empty($id)) {
+        return null;
+    }
+
+    if (!in_array($id, $allowed_list)) {
+        return "Указана несуществующая категория";
+    }
+
+    return null;
+}
+
+/* проверяет длину строки поля name*/
+function validateLength($name, $min, $max)
+{
+    $len = strlen($_POST[$name]);
+
+    if (empty($len)) {
+        return null;
+    }
+
+    if ($len < $min or $len > $max) {
+        return "Значение должно быть от $min до $max символов";
+    }
+
+    return null;
+}
+
+/* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
+если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
+function saveTaskAndRedirect($errors, $connect, $task)
+{
+    if (count($errors) === 0) {
+        $sql = 'INSERT INTO task (date, status, name, file, deadline, author_id, project_id)
+                VALUES (NOW(), 0, ?, ?, ?, 1, ?)';
+        $stmt = db_get_prepare_stmt($connect, $sql, [$task['name'], $task['file'], $task['date'], $task['project']]);
+        $res = mysqli_stmt_execute($stmt);
+
+        if ($res) {
+            $task_id = mysqli_insert_id($connect);
+
+            header("Location: index.php?id=" . $task_id);
+            exit();
+        }
+    }
+}
+
+/* проверяет дату в форме*/
+function validateDate($date)
+{
+    $date = $_POST['date'];
+    /* проверяет дату, если она заполнена*/
+    if (!empty($date)) {
+        $currentDate = date('Y-m-d');
+        /* проверяет формат даты с помощью функции is_date_valid в helpers*/
+        if (!is_date_valid($date)) {
+           return 'Неверный формат даты';
+        }
+        /* проверяет меньше ли дата текущей даты*/
+        if (strtotime($date) <= strtotime($currentDate)) {
+            return 'Дата не может быть меньше текущей';
+        }
+    }
+    return null;
+}
