@@ -16,7 +16,6 @@ $task = [
 ];
 
 $errors = [];
-
 /* валидация формы*/
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_ids = array_column($projects, 'id');
@@ -35,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     ];
 
-    /* проверяет, что обязательный поля заполнены*/
+    /* проверяет, что обязательные поля заполнены*/
     foreach ($required as $key) {
         if (empty($_POST[$key])) {
             $errors[$key] = 'Это поле надо заполнить';
