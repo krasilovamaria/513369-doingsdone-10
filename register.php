@@ -17,26 +17,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     ];
 
-    /* проверяем, что обязательные поля заполнены*/
+    /* проверяет, что обязательные поля заполнены*/
     foreach ($required as $key) {
         if (empty($_POST[$key])) {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
 
-    /* возвращает значения массива*/
+    /* отфильтровывает массив от пустых значений, чтобы оставить только ошибки*/
+    foreach ($_POST as $key => $value) {
+        if (!isset($errors[$key]) && isset($rules[$key])) {
+            $rule = $rules[$key];
+            $errors[$key] = $rule();
+        }
+    }
+
     $errors = array_filter($errors);
 
     /* проверяет email*/
-    if (!isset($errors['email'])) {
-        $errors['email'] = "Электронная почта введена неверна";
-    }
+    $errors['email'] = filter_var($user['email'], FILTER_VALIDATE_EMAIL) ? null : 'Электронная почта введена неверна';
+
     /* проверяет, что email уникальный*/
     if (!isset($errors['email'])) {
-        $sql_email = "SELECT email FROM user WHERE email = /* что прописать 'email' ??*/";
+        $email = mysqli_real_escape_string($connect, $user['email']);
+        $sql_email = "SELECT id FROM user WHERE email = '$email'";
         $result = mysqli_query($connect, $sql_email);
-        $email = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        if ($email) {
+
+        /* если количество строк больше 0 выводит ошибку*/
+        if (mysqli_num_rows($result) > 0) {
             $errors['email'] = "Пользователь с таким e-mail уже зарегистрирован";
         }
     }

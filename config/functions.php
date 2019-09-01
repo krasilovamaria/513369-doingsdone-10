@@ -133,9 +133,11 @@ function saveTaskAndRedirect($errors, $connect, $task)
 function saveUserAndRedirect($errors, $connect, $user)
 {
     if (count($errors) === 0) {
+        $password = password_hash($user['password'], PASSWORD_DEFAULT);
+
         $sql = 'INSERT INTO user (date, email, name, password)
                 VALUES (NOW(), ?, ?, ?)';
-        $stmt = db_get_prepare_stmt($connect, $sql, [$user['email'], $user['password'], $user['name']]);
+        $stmt = db_get_prepare_stmt($connect, $sql, [$user['email'], $user['name'], $password]);
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {
