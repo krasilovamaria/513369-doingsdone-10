@@ -128,6 +128,27 @@ function saveTaskAndRedirect($errors, $connect, $task)
     }
 }
 
+/* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
+если ошибок нет добавляем user в бд и делаем редирект на главную страницу*/
+function saveUserAndRedirect($errors, $connect, $user)
+{
+    if (count($errors) === 0) {
+        $password = password_hash($user['password'], PASSWORD_DEFAULT);
+
+        $sql = 'INSERT INTO user (date, email, name, password)
+                VALUES (NOW(), ?, ?, ?)';
+        $stmt = db_get_prepare_stmt($connect, $sql, [$user['email'], $user['name'], $password]);
+        $res = mysqli_stmt_execute($stmt);
+
+        if ($res) {
+            $user_id = mysqli_insert_id($connect);
+
+            header("Location: index.php?id=" . $user_id);
+            exit();
+        }
+    }
+}
+
 /* проверяет дату в форме*/
 function validateDate($date)
 {

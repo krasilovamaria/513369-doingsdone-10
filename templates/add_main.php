@@ -29,7 +29,7 @@
             <input class="form__input
             <?php if (!empty($errors['name'])) : ?> form__input--error <?php endif /* добавляет класс form__input--error если поле пустое*/?>"
             type="text" name="name" id="name" value="" placeholder="Введите название">
-            <?php if (!empty($errors['name'])) : ?> <p class="form__message"><?= $errors['name'] ?></p> <?php endif
+            <?php if (!empty($errors['name'])) : ?><p class="form__message"><?= $errors['name'] ?></p> <?php endif
             /* добавляет в контейнер поля новый тег p.form__message*/?>
         </div>
 
@@ -50,7 +50,7 @@
 
                 <input class="form__input form__input--date<?php if(!empty($errors['date'])) : ?>
                 form__input--error <?php endif?>" type="text" name="date" id="date" value="<?= $_POST['date'] ?? "" ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
-                <?php if (!empty($errors['date'])) : ?><p class="form__message"><?= $errors['date'] ?></p> <?php endif ?>
+                <?php if (!empty($errors['date'])) : ?><p class="form__message"><?= $errors['date'] ?></p> <?php endif?>
         </div>
 
         <div class="form__row">
@@ -62,7 +62,7 @@
                 <label class="button button--transparent" for="file">
                     <span>Выберите файл</span>
                 </label>
-                <?php if (!empty($errors['file'])) : ?><p class="form__message"><?= $errors['file'] ?></p> <?php endif ?>
+                <?php if (!empty($errors['file'])) : ?><p class="form__message"><?= $errors['file'] ?></p> <?php endif?>
             </div>
         </div>
 
