@@ -35,7 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = array_filter($errors);
 
     /* проверяет email*/
-    $errors['email'] = filter_var($user['email'], FILTER_VALIDATE_EMAIL) ? null : 'Электронная почта введена неверна';
+    if (!isset($errors['email']) && filter_var($user['email'], FILTER_VALIDATE_EMAIL) === false) {
+        $errors['email'] = 'Невалидный адрес электронной почты';
+    }
 
     /* проверяет, что email уникальный*/
     if (!isset($errors['email'])) {
