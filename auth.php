@@ -1,13 +1,6 @@
 <?php
 require_once('config/init.php');
 
-/* если есть данные о пользователе в $user из сессии открывает доступ к странице,
-если нет то редирект на гостевую страницу*/
-if (!empty($user)) {
-    header("Location: /");
-    exit();
-}
-
 $user = [
     'email' => $_POST['email'] ?? null,
     'password' => $_POST['password'] ?? null,
@@ -31,28 +24,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['email'] = 'E-mail введён некорректно';
     }
 
-    /* если email заполнен корректно делаем запрос к БД*/
-    $email = mysqli_real_escape_string($connect, $user['email']);
-    $sql = "SELECT * FROM user WHERE email = '$email'";
-    $result = mysqli_query($connect, $sql_email);
-    $verify = mysqli_fetch_assoc($result);
-
-    /* проверяет есть ли email в бд*/
-    if (empty($errors['email']) && empty($result)) {
-        $errors['email'] = "E-mail в базе не найден";
-    }
-
-    /* проверяет подходит ли пароль к email*/
     if (empty($errors)) {
+        /* если email заполнен корректно делаем запрос к БД*/
+        $result = getUser($connect, $user);
+        $verify = mysqli_fetch_assoc($result);
+
+        /* проверяет есть ли email в бд*/
+        if (empty($errors['email']) && empty($result)) {
+            $errors['email'] = "E-mail в базе не найден";
+        }
+
+        /* проверяет подходит ли пароль к email*/
         if (!password_verify($user['password'], $verify['password'])) {
             $errors['password'] = 'Неверный пароль';
         }
-    }
 
-    /* если нет ошибок, добавляет в сессию пользователя
-    и делает редирект на главную страницу*/
-    if (empty($errors)) {
-        $_SESSION['user_id'] = $verify['user_id'];
+        /* если нет ошибок, добавляет в сессию пользователя
+        и делает редирект на главную страницу*/
+        $_SESSION['user_id'] = $verify['id'];
 
         header("Location: index.php");
         exit();

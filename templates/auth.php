@@ -1,6 +1,6 @@
 <h2 class="content__main-heading">Вход на сайт</h2>
 
-<form class="form" action="index.php" method="post" autocomplete="off">
+<form class="form" action="auth.php" method="post" autocomplete="off">
     <div class="form__row">
         <label class="form__label" for="email">E-mail <sup>*</sup></label>
 

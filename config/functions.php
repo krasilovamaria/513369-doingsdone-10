@@ -149,6 +149,14 @@ function saveUserAndRedirect($errors, $connect, $user)
     }
 }
 
+/* получает данные user*/
+function getUser($connect, $user) {
+    $email = mysqli_real_escape_string($connect, $user['email']);
+    $sql = "SELECT * FROM user WHERE email = '$email'";
+    $result = mysqli_query($connect, $sql);
+    return $result;
+}
+
 /* проверяет дату в форме*/
 function validateDate($date)
 {
