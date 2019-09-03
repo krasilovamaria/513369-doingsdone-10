@@ -1,6 +1,12 @@
 <?php
 require_once('config/init.php');
 
+/* если пользователь есть в сессии, делаем редирект на index.php*/
+if (!empty($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit;
+}
+
 $user = [
     'email' => $_POST['email'] ?? null,
     'password' => $_POST['password'] ?? null,
@@ -59,11 +65,5 @@ $layout_content = include_template('auth_layout.php', [
     'content' => $page_content,
     'title' => 'Дела в порядке - Вход'
 ]);
-
-/* если пользователь есть в сессии, делаем редирект на index.php*/
-if (!empty($_SESSION['user_id'])) {
-    header("Location: index.php");
-    exit;
-}
 
 print $layout_content;
