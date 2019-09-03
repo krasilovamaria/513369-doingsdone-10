@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $verify = mysqli_fetch_assoc($result);
 
         /* проверяет есть ли email в бд*/
-        if (empty($errors['email']) && empty($result)) {
+        if (empty($result)) {
             $errors['email'] = "E-mail в базе не найден";
         }
 
@@ -57,5 +57,13 @@ $layout_content = include_template('auth_layout.php', [
     'content' => $page_content,
     'title' => 'Дела в порядке - Вход'
 ]);
+
+/* если пользователь есть в сессии, делаем редирект на index.php*/
+if (!empty($_SESSION['user_id'])) {
+    print include_template('index.php', [
+        'title' => 'Дела в порядке - Главная страница'
+    ]);
+    exit;
+}
 
 print $layout_content;

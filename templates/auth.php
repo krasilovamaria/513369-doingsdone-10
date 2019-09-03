@@ -16,7 +16,7 @@
         <input class="form__input <?php if (!empty($errors['password'])) : ?>form__input--error<?php endif ?>"
          type="password" name="password" id="password" value="" placeholder="Введите пароль">
 
-        <?php if (!empty($errors['password'])) : ?><p class="form__message"><?= $errors['email'] ?></p><?php endif ?>
+        <?php if (!empty($errors['password'])) : ?><p class="form__message"><?= $errors['password'] ?></p><?php endif ?>
     </div>
 
     <div class="form__row form__row--controls">
