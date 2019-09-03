@@ -41,10 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         /* если нет ошибок, добавляет в сессию пользователя
         и делает редирект на главную страницу*/
-        $_SESSION['user_id'] = $verify['id'];
+        if (empty($errors)) {
+            $_SESSION['user_id'] = $verify['id'];
 
-        header("Location: index.php");
-        exit();
+            header("Location: index.php");
+            exit();
+        }
     }
 }
 
