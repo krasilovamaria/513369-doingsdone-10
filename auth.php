@@ -60,9 +60,7 @@ $layout_content = include_template('auth_layout.php', [
 
 /* если пользователь есть в сессии, делаем редирект на index.php*/
 if (!empty($_SESSION['user_id'])) {
-    print include_template('index.php', [
-        'title' => 'Дела в порядке - Главная страница'
-    ]);
+    header("Location: index.php");
     exit;
 }
 
