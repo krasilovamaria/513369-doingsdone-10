@@ -1,6 +1,15 @@
 <?php
 require_once('config/init.php');
 
+/* если есть данные о user из сессии открывает доступ к главной странице,
+если нет делает редирект на гостевую страницу*/
+if (empty($_SESSION['user_id'])) {
+    print include_template('guest.php', [
+        'title' => 'Дела в порядке - Гостевая страница'
+    ]);
+    exit;
+}
+
 /* получает список проектов*/
 /* если параметра нет, то NULL(показывает задачи как есть)*/
 $project_id = $_GET['project_id'] ?? null;
@@ -25,11 +34,13 @@ $page_content = include_template('main.php', [
     'show_complete_tasks' => $show_complete_tasks,
     'content' => include_template('table_tasks.php', [
         'show_complete_tasks' => $show_complete_tasks,
-        'tasks' => $tasks])
+        'tasks' => $tasks
+    ])
 ]);
 $layout_content = include_template('layout.php', [
     'user' => $user_name,
     'content' => $page_content,
     'title' => 'Дела в порядке - Главная страница'
 ]);
+
 print($layout_content);
