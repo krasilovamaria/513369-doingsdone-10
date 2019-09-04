@@ -36,12 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $verify = mysqli_fetch_assoc($result);
 
         /* проверяет есть ли email в бд*/
-        if (empty($result)) {
+        if (empty($verify)) {
             $errors['email'] = "E-mail в базе не найден";
         }
 
         /* проверяет подходит ли пароль к email*/
-        if (!password_verify($user['password'], $verify['password'])) {
+        if (!isset($errors['email']) && !password_verify($user['password'], $verify['password'])) {
             $errors['password'] = 'Неверный пароль';
         }
 

@@ -26,7 +26,7 @@
                         <div class="user-menu__data">
                             <p><?=htmlspecialchars($user);?></p>
 
-                            <a href="logout.php">Выйти</a>
+                            <a href="guest.php">Выйти</a>
                         </div>
                     </div>
                 </div>
