@@ -129,6 +129,25 @@ function saveTaskAndRedirect($errors, $connect, $task)
 }
 
 /* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
+если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
+function saveProjectAndRedirect($errors, $connect, $project)
+{
+    if (count($errors) === 0) {
+        $sql = 'INSERT INTO project (name, author_id)
+                VALUES (?, 1)';
+        $stmt = db_get_prepare_stmt($connect, $sql, [$project['name']]);
+        $res = mysqli_stmt_execute($stmt);
+
+        if ($res) {
+            $project_id = mysqli_insert_id($connect);
+
+            header("Location: index.php?id=" . $project_id);
+            exit();
+        }
+    }
+}
+
+/* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
 если ошибок нет добавляем user в бд и делаем редирект на главную страницу*/
 function saveUserAndRedirect($errors, $connect, $user)
 {

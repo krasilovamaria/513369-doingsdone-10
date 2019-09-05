@@ -13,10 +13,42 @@ $project_id = $_GET['project_id'] ?? null;
 $projects = getProjects($connect);
 
 $project = [
-    'email' => $_POST['email'] ?? null,
-    'password' => $_POST['password'] ?? null,
+    'name' => $_POST['name'] ?? null
 ];
 $errors = [];
+/* валидация формы*/
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $project_ids = array_column($projects, 'id');
+    $required = ['name'];
+
+    /* проверяет $project и $name*/
+    $rules = [
+        'name' => function () {
+            return validateLength('name', 1, 100);
+        }
+    ];
+
+    /* проверяет, что обязательные поля заполнены*/
+    foreach ($required as $key) {
+        if (empty($_POST[$key])) {
+            $errors[$key] = 'Это поле надо заполнить';
+        }
+    }
+
+    /* отфильтровывает массив от пустых значений, чтобы оставить только ошибки*/
+    foreach ($_POST as $key => $value) {
+        if (!isset($errors[$key]) && isset($rules[$key])) {
+            $rule = $rules[$key];
+            $errors[$key] = $rule();
+        }
+    }
+
+    $errors = array_filter($errors);
+
+    /* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
+    если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
+    saveProjectAndRedirect($errors, $connect, $project);
+}
 
 /* подключение контента*/
 $page_content = include_template('add_project.php', [
