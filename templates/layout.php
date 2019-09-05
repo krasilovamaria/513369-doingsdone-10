@@ -24,15 +24,38 @@
 
                     <div class="main-header__side-item user-menu">
                         <div class="user-menu__data">
-                            <p><?=htmlspecialchars($user);?></p>
+                            <p><?= htmlspecialchars($user); ?></p>
 
-                            <a href="guest.php">Выйти</a>
+                            <a href="logout.php">Выйти</a>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <div class="content"><?=$content;?></div>
+            <div class="content">
+                <section class="content__side">
+                    <h2 class="content__side-heading">Проекты</h2>
+
+                    <nav class="main-navigation">
+                        <ul class="main-navigation__list">
+                            <?php foreach ($projects as $item) : /*добавляет список проектов из массива $projects*/ ?>
+                                <li class="main-navigation__list-item<?= getProjectsMenuActiveItemClass($item['project_id']) /*выделяет активный проект*/ ?>">
+                                    <a class="main-navigation__list-item-link" href="index.php?project_id=<?= $item['id']; /*добавляет адрес ссылки*/ ?>">
+                                        <?= htmlspecialchars($item['name']);
+                                            /* htmlspecialchars фильтрует данные, для защиты от XSS */ ?></a>
+                                    <span class="main-navigation__list-item-count">
+                                        <?= htmlspecialchars($item['projects_count']); /*подсчет задач через SQL*/ ?>
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </nav>
+
+                    <a class="button button--transparent button--plus content__side-button" href="form-project.html">Добавить проект</a>
+                </section>
+
+                <main class="content__main"><?= $content; ?></main>
+            </div>
         </div>
     </div>
 
