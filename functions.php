@@ -194,3 +194,11 @@ function validateDate($date)
     }
     return null;
 }
+
+function buildFilterLinkUrl ($filterName) {
+    $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+    parse_str($queryString, $data);
+    $data['filter'] = $filterName;
+
+    return http_build_query($data);
+}

@@ -2,7 +2,7 @@
 require_once('config/init.php');
 
 /* если пользователь есть в сессии, делаем редирект на index.php*/
-if (!empty($_SESSION['user_id'])) {
+if (empty($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
 }

@@ -6,7 +6,7 @@
         <?= is_date_important($item['deadline']) ? 'task--important' : '' /*добавляет класс task--important*/ ?>">
         <td class="task__select">
             <label class="checkbox task__checkbox">
-                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= $item['status'] === '1' ? ' checked' : ''
+                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="<?= $item['id'] ?? 0 ?>" <?= $item['status'] === '1' ? ' checked' : ''
                 /*добавляет атрибут "checked"*/ ?>>
                 <span class="checkbox__text"><?= htmlspecialchars($item['name']); ?></span>
             </label>

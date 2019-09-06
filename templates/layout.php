@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
+    <script src="flatpickr.js"></script>
+    <script src="script.js"></script>
 </head>
 
 <body>
@@ -51,10 +53,10 @@
                         </ul>
                     </nav>
 
-                    <a class="button button--transparent button--plus content__side-button" href="form-project.html">Добавить проект</a>
+                    <a class="button button--transparent button--plus content__side-button" href="project.php">Добавить проект</a>
                 </section>
 
-                <main class="content__main"><?= $content; ?></main>
+                <div class="content"><?=$content;?></div>
             </div>
         </div>
     </div>
