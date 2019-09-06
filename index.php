@@ -33,6 +33,25 @@ if (isset($_GET['task_id'], $_GET['check']) && $_GET['task_id'] !== '' && $_GET[
     /* обновляет task в бд*/
     $sql_update = "UPDATE task SET status = $check WHERE id = $task_id AND author_id = $user_id";
     $res = mysqli_query($connect, $sql_update);
+
+    /* sql запрос для получения задач*/
+    $sql = "SELECT * FROM task WHERE id = $user_id";
+    /* условия WHERE для запроса получения задач*/
+    if ($filter === 'all') {
+        $sql .= ' WHERE deadline';
+    } elseif ($filter === 'today') {
+        $sql .= ' WHERE deadline = CURDATE()';
+    } elseif ($filter === 'tomorrow') {
+        $sql .= ' WHERE deadline = DATE_ADD(CURDATE(), INTERVAL 1 DAY)';
+    } elseif ($filter === 'bad') {
+        $sql .= ' WHERE deadline < CURDATE()';
+    }
+    if ($show_completed === '0' || $show_completed === '1') {
+        $sql .= ' WHERE date IS NULL';
+    }
+    if ($projectId !== null) {
+        $sql .= ' WHERE ...';
+    }
 }
 
 /* получает список проектов*/
@@ -52,8 +71,6 @@ $tasks = getTasks($connect, $project_id);
 if (count($tasks) === 0) {
     print404Page($user_name, $projects, $show_complete_tasks);
 }
-
-
 
 /* подключение контента через include_template*/
 $page_content = include_template('main.php', [

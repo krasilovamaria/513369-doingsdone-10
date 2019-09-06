@@ -169,7 +169,8 @@ function saveUserAndRedirect($errors, $connect, $user)
 }
 
 /* получает данные user*/
-function getUser($connect, $user) {
+function getUser($connect, $user)
+{
     $email = mysqli_real_escape_string($connect, $user['email']);
     $sql = "SELECT * FROM user WHERE email = '$email'";
     $result = mysqli_query($connect, $sql);
@@ -185,7 +186,7 @@ function validateDate($date)
         $currentDate = date('Y-m-d');
         /* проверяет формат даты с помощью функции is_date_valid в helpers*/
         if (!is_date_valid($date)) {
-           return 'Неверный формат даты';
+            return 'Неверный формат даты';
         }
         /* проверяет меньше ли дата текущей даты*/
         if (strtotime($date) <= strtotime($currentDate)) {
@@ -195,10 +196,22 @@ function validateDate($date)
     return null;
 }
 
-function buildFilterLinkUrl ($filterName) {
+/* добавляет фильтры*/
+function buildFilterLinkUrl($filterName)
+{
     $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
     parse_str($queryString, $data);
     $data['filter'] = $filterName;
+
+    return http_build_query($data);
+}
+
+/* добавляет фильтр для проектов*/
+function buildProjectLinkUrl($projectName)
+{
+    $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+    parse_str($queryString, $data);
+    $data['project'] = $projectName;
 
     return http_build_query($data);
 }
