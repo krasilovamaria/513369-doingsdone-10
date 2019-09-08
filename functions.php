@@ -17,12 +17,25 @@ function is_date_important($date)
 }
 
 /* получает массив задач и SQL-запрос для отображения списка задач у текущего пользователя */
-function getTasks($connect, $project_id = null)
+function getTasks($connect, $user_id, $project_id = null, $filter = null, $show_completed = null)
 {
-    $sql = 'SELECT id, name, status, file, deadline, project_id FROM task';
+    $user_id = mysqli_real_escape_string($connect, $user_id);
+    $sql = 'SELECT id, name, status, file, deadline, project_id FROM task WHERE task.author_id =' . $user_id;
 
     if ($project_id !== null) {
-        $sql .= ' WHERE project_id = ' . mysqli_real_escape_string($connect, $project_id) /* чтобы не было SQL-инъекций*/;
+        $sql .= ' AND project_id = ' . mysqli_real_escape_string($connect, $project_id) /* чтобы не было SQL-инъекций*/;
+    }
+
+    /* условия для запроса получения задач*/
+    if ($filter === 'today') {
+        $sql .= ' AND deadline = CURDATE()';
+    } elseif ($filter === 'tomorrow') {
+        $sql .= ' AND deadline = DATE_ADD(CURDATE(), INTERVAL 1 DAY)';
+    } elseif ($filter === 'bad') {
+        $sql .= ' AND deadline < CURDATE()';
+    }
+    if ($show_completed === '0') {
+        $sql .= ' AND status = 0';
     }
 
     $result = mysqli_query($connect, $sql);
@@ -34,11 +47,14 @@ function getTasks($connect, $project_id = null)
 }
 
 /* получает массив проектов и SQL-запрос для отображения списка проектов у текущего пользователя */
-function getProjects($connect)
+function getProjects($connect, $user_id)
 {
+    /* экранируем, чтобы не было иньекций*/
+    $user_id = mysqli_real_escape_string($connect, $user_id);
     $sql = 'SELECT p.id, p.name, COUNT(t.id) as projects_count, t.project_id FROM project p
             LEFT JOIN task t on p.id = t.project_id
-            GROUP BY p.id';
+            WHERE p.author_id =' . $user_id .
+        ' GROUP BY p.id';
     $result = mysqli_query($connect, $sql);
     if ($result === false) {
         die("Ошибка при выполнении запроса '$sql'.<br> Текст ошибки: " . mysqli_error($connect));
@@ -70,6 +86,7 @@ function print404Page($user_name, $projects, $show_complete_tasks)
     $layout_content = include_template('layout.php', [
         'user' => $user_name,
         'content' => $page_content,
+        'projects' => $projects,
         'title' => 'Дела в порядке - Главная страница'
     ]);
     print($layout_content);
@@ -109,14 +126,33 @@ function validateLength($name, $min, $max)
     return null;
 }
 
+/* проверяет, чтобы названия проктов были разными для user*/
+function validateProjectExists($connect, $user_id, $project_key)
+{
+    $project_name = $_POST[$project_key] ?? null;
+
+    $project_name  = mysqli_real_escape_string($connect, $project_name);
+    $author_id = mysqli_real_escape_string($connect, $user_id);
+
+    $sql = "SELECT * FROM project WHERE name = '$project_name' AND author_id = $author_id";
+    $result = mysqli_query($connect, $sql);
+    $project = mysqli_fetch_assoc($result);
+
+    if ($project !== null) {
+        return 'Проект с таким названием уже существует';
+    }
+
+    return null;
+}
+
 /* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
 если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
-function saveTaskAndRedirect($errors, $connect, $task)
+function saveTaskAndRedirect($errors, $connect, $user_id, $task)
 {
     if (count($errors) === 0) {
         $sql = 'INSERT INTO task (date, status, name, file, deadline, author_id, project_id)
-                VALUES (NOW(), 0, ?, ?, ?, 1, ?)';
-        $stmt = db_get_prepare_stmt($connect, $sql, [$task['name'], $task['file'], $task['date'], $task['project']]);
+                VALUES (NOW(), 0, ?, ?, ?, ?, ?)';
+        $stmt = db_get_prepare_stmt($connect, $sql, [$task['name'], $task['file'], $task['date'], $user_id, $task['project']]);
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {
@@ -130,12 +166,12 @@ function saveTaskAndRedirect($errors, $connect, $task)
 
 /* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
 если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
-function saveProjectAndRedirect($errors, $connect, $project)
+function saveProjectAndRedirect($errors, $connect, $user_id, $project)
 {
     if (count($errors) === 0) {
         $sql = 'INSERT INTO project (name, author_id)
-                VALUES (?, 1)';
-        $stmt = db_get_prepare_stmt($connect, $sql, [$project['name']]);
+                VALUES (?, ?)';
+        $stmt = db_get_prepare_stmt($connect, $sql, [$project['name'], $user_id]);
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {

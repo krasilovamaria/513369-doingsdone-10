@@ -11,4 +11,6 @@ $connect = mysqli_connect('localhost:3366', 'root', 'rootpass', 'doingsdone');
 mysqli_set_charset($connect, 'utf8');
 
 /* имя пользователя*/
+/* ?? null проверяет на isset*/
 $user_name = $_SESSION['user_name'] ?? null;
+$user_id = $_SESSION['user_id'] ?? null;
