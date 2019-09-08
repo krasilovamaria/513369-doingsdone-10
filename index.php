@@ -55,7 +55,7 @@ if (isset($_GET['search'])) {
     $find_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     if (empty($find_tasks)) {
-        $page_content = include_template('not-found.php');
+        $page_content = include_template('not_found.php');
     }
 }
 
