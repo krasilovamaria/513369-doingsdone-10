@@ -10,19 +10,37 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
+/* показывает выполненные задачи, после нажатия на чекбокс*/
+if (isset($_GET['task_id'], $_GET['check']) && $_GET['task_id'] !== '' && $_GET['check'] !== '') {
+    $task_id = mysqli_real_escape_string($connect, (int) ($_GET['task_id'] ?? 0));
+    $check = mysqli_real_escape_string($connect, (int) ($_GET['check'] ?? 0));
+    $user_id = mysqli_real_escape_string($connect, $user_id);
+
+    /* обновляет task в бд*/
+    $sql_update = "UPDATE task SET status = $check WHERE id = $task_id AND author_id = $user_id";
+    $res = mysqli_query($connect, $sql_update);
+}
+
 /* получает список проектов*/
 /* если параметра нет, то NULL(показывает задачи как есть)*/
 $project_id = $_GET['project_id'] ?? null;
-$projects = getProjects($connect);
+$filter = $_GET['filter'] ?? null;
+/* если нет параметра устанавливает 0 по умолчанию*/
+$show_complete_tasks = $_GET['show_completed'] ?? '0';
 
-/* получает список задач*/
-$tasks = getTasks($connect, $project_id);
+/* не дает ввести в строку данные кроме 0 и 1*/
+if($show_complete_tasks !== '0' && $show_complete_tasks !== '1') {
+    $show_complete_tasks = '0';
+}
 
+$projects = getProjects($connect, $user_id);
 /* если параметра запроса не существует, то 404*/
 if ($project_id === '') {
     print404Page($user_name, $projects, $show_complete_tasks);
 }
-$tasks = getTasks($connect, $project_id);
+
+/* получает список задач*/
+$tasks = getTasks($connect, $user_id, $project_id, $filter, $show_complete_tasks);
 /* если по id проекта не нашлось ни одной записи, то 404*/
 if (count($tasks) === 0) {
     print404Page($user_name, $projects, $show_complete_tasks);
@@ -38,6 +56,7 @@ $page_content = include_template('main.php', [
     ])
 ]);
 $layout_content = include_template('layout.php', [
+    'projects' => $projects,
     'user' => $user_name,
     'content' => $page_content,
     'title' => 'Дела в порядке - Главная страница'

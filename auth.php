@@ -3,7 +3,7 @@ require_once('config/init.php');
 
 /* если пользователь есть в сессии, делаем редирект на index.php*/
 if (!empty($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: /index.php");
     exit;
 }
 
@@ -49,8 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         и делает редирект на главную страницу*/
         if (empty($errors)) {
             $_SESSION['user_id'] = $verify['id'];
+            $_SESSION['user_name'] = $verify['name'];
 
-            header("Location: index.php");
+            header("Location: /index.php");
             exit();
         }
     }

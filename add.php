@@ -13,9 +13,9 @@ if (empty($_SESSION['user_id'])) {
 /* получает список проектов*/
 /* если параметра нет, то NULL(показывает задачи как есть)*/
 $project_id = $_GET['project_id'] ?? null;
-$projects = getProjects($connect);
+$projects = getProjects($connect, $user_id);
 /* получает список задач*/
-$tasks = getTasks($connect, $project_id);
+$tasks = getTasks($connect, $user_id, $project_id);
 
 $task = [
     'name' => $_POST['name'] ?? null,
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
     если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
-    saveTaskAndRedirect($errors, $connect, $task);
+    saveTaskAndRedirect($errors, $connect, $user_id, $task);
 }
 
 /* подключение контента*/
