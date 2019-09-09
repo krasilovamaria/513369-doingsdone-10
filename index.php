@@ -46,10 +46,11 @@ if (count($tasks) === 0) {
     print404Page($user_name, $projects, $show_complete_tasks);
 }
 
+$search = '';
 /* добавляет полнотекстовый поиск*/
 if (isset($_GET['search'])) {
     $search = mysqli_real_escape_string($connect, $_GET['search']);
-    $sql = "SELECT * FROM task WHERE MATCH(name) AGAINST(?) AND author_id = $user_id ORDER BY date DESC";
+    $sql = "SELECT * FROM task WHERE MATCH(name) AGAINST('$search') AND author_id = '$user_id' ORDER BY date DESC";
     $result = mysqli_query($connect, $sql);
 
     $find_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
