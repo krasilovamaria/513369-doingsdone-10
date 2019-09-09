@@ -90,6 +90,7 @@ $page_content = include_template('add_main.php', [
 ]);
 
 $layout_content = include_template('layout.php', [
+    'projects' => $projects,
     'user' => $user_name,
     'content' => $page_content,
     'title' => 'Дела в порядке - Добавление задачи'

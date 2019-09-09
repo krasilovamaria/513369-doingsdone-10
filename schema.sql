@@ -33,3 +33,4 @@ CREATE TABLE task (
 
 CREATE INDEX author_id ON project(author_id);
 CREATE INDEX project_id ON task(project_id);
+CREATE FULLTEXT INDEX search ON task(name);
