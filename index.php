@@ -53,9 +53,9 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
     $sql = "SELECT * FROM task WHERE MATCH(name) AGAINST('$search') AND author_id = '$user_id' ORDER BY date DESC";
     $result = mysqli_query($connect, $sql);
 
-    $find_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    if (empty($find_tasks)) {
+    if (empty($tasks)) {
         $page_content = include_template('not_found.php');
     }
 }
