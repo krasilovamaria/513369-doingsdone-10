@@ -48,7 +48,7 @@ if (count($tasks) === 0) {
 
 $search = '';
 /* добавляет полнотекстовый поиск*/
-if (isset($_GET['search'])) {
+if (isset($_GET['search']) && $_GET['search'] !== '') {
     $search = mysqli_real_escape_string($connect, $_GET['search']);
     $sql = "SELECT * FROM task WHERE MATCH(name) AGAINST('$search') AND author_id = '$user_id' ORDER BY date DESC";
     $result = mysqli_query($connect, $sql);
