@@ -19,7 +19,6 @@ if (!empty($users_current_date)) {
     /* формирует само письмо*/
     foreach ($users_current_date as $key => $value) {
         $msg = '';
-        $msg_content = '';
         /* получает задачи для определенного пользователя*/
         $sql_tasks = 'SELECT * FROM task WHERE status = 0 AND deadline = CURDATE() AND author_id = ' . $value['id'];
         $result = mysqli_query($connect, $sql_tasks);
