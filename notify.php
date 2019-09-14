@@ -23,15 +23,15 @@ if (!empty($users_current_date)) {
         /* получает задачи для определенного пользователя*/
         $sql_tasks = "SELECT * FROM task WHERE status = 0 AND deadline = CURDATE() AND author_id = " . $value['id'];
         $result = mysqli_query($connect, $sql_tasks);
-        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $user_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         /* меняет имя для каждого пользователя*/
         $msg_content = "Уважаемый(-ая) " . $value['name'] . " у вас запланирована задача(-и) ";
         /* обнуляет переменную для работы*/
         $msg = "";
         /* формирует список задач для пользователя*/
-        foreach ($tasks as $k => $task) {
-            $msg .= "<br>" . $task['name'] . " на дату: " . correct_visual_date($task['term']) . " ";
+        foreach ($user_tasks as $k => $task) {
+            $msg .= "<br>" . $task['name'] . " на дату: " . correct_visual_date($task['deadline']) . " ";
         }
         /* формирует шаблон письма*/
         $message = new Swift_Message('Уведомление от сервиса «Дела в порядке»');
