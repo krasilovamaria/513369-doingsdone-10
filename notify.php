@@ -29,7 +29,7 @@ if (!empty($users_current_date)) {
         /* обнуляет переменную для работы*/
         /* формирует список задач для пользователя*/
         foreach ($user_tasks as $k => $task) {
-            $msg .= '<br>' . $task['name'] . ' на дату: ' . correct_visual_date($task['deadline']) . '';
+            $msg .= '<br>' . $task['name'] . ' на дату: ' . $task['deadline'] . '';
         }
         /* формирует шаблон письма*/
         $message = new Swift_Message('Уведомление от сервиса «Дела в порядке»');
