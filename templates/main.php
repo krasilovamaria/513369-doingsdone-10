@@ -2,7 +2,7 @@
     <h2 class="content__main-heading">Список задач</h2>
 
     <form class="search-form" action="/index.php" method="get" autocomplete="off">
-        <input class="search-form__input" type="text" name="search" value="" placeholder="Поиск по задачам">
+        <input class="search-form__input" type="text" name="search" value="<?= $_GET['search'] ?? ''?>" placeholder="Поиск по задачам">
 
         <input class="search-form__submit" type="submit" name="" value="Искать">
     </form>
@@ -22,7 +22,7 @@
                 Завтра
             </a>
             <a href="/?<?= buildFilterLinkUrl('bad'); ?>"
-            class="tasks-switch__item<?= isset($_GET['filter']) && $_GET['bad'] === 'all' ? ' tasks-switch__item--active' : '' ?>">
+            class="tasks-switch__item<?= isset($_GET['filter']) && $_GET['filter'] === 'bad' ? ' tasks-switch__item--active' : '' ?>">
                 Просроченные
             </a>
         </nav>

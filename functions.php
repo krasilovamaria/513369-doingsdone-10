@@ -218,7 +218,7 @@ function validateDate($date)
 {
     $date = $_POST['date'];
     /* проверяет дату, если она заполнена*/
-    if (!empty($date)) {
+    if (isset($date)) {
         $currentDate = date('Y-m-d');
         /* проверяет формат даты с помощью функции is_date_valid в helpers*/
         if (!is_date_valid($date)) {
