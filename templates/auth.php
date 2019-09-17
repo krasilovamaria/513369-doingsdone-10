@@ -4,19 +4,19 @@
     <div class="form__row">
         <label class="form__label" for="email">E-mail <sup>*</sup></label>
 
-        <input class="form__input <?php if (!empty($errors['email'])) : ?>form__input--error<?php endif ?>"
+        <input class="form__input <?php if (isset($errors['email'])) : ?>form__input--error<?php endif ?>"
          type="text" name="email" id="email" value="<?= $_POST['email'] ?? "" ?>" placeholder="Введите e-mail">
 
-        <?php if (!empty($errors['email'])) : ?><p class="form__message"><?= $errors['email'] ?></p><?php endif ?>
+        <?php if (isset($errors['email'])) : ?><p class="form__message"><?= $errors['email'] ?></p><?php endif ?>
     </div>
 
     <div class="form__row">
         <label class="form__label" for="password">Пароль <sup>*</sup></label>
 
-        <input class="form__input <?php if (!empty($errors['password'])) : ?>form__input--error<?php endif ?>"
+        <input class="form__input <?php if (isset($errors['password'])) : ?>form__input--error<?php endif ?>"
          type="password" name="password" id="password" value="" placeholder="Введите пароль">
 
-        <?php if (!empty($errors['password'])) : ?><p class="form__message"><?= $errors['password'] ?></p><?php endif ?>
+        <?php if (isset($errors['password'])) : ?><p class="form__message"><?= $errors['password'] ?></p><?php endif ?>
     </div>
 
     <div class="form__row form__row--controls">
