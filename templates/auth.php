@@ -14,7 +14,7 @@
         <label class="form__label" for="password">Пароль <sup>*</sup></label>
 
         <input class="form__input <?php if (isset($errors['password'])) : ?>form__input--error<?php endif ?>"
-         type="password" name="password" id="password" value="" placeholder="Введите пароль">
+         type="password" name="password" id="password" value="<?= $_POST['password'] ?? "" ?>" placeholder="Введите пароль">
 
         <?php if (isset($errors['password'])) : ?><p class="form__message"><?= $errors['password'] ?></p><?php endif ?>
     </div>

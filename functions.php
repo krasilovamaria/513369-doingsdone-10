@@ -2,7 +2,13 @@
 /*показывать или нет выполненные задачи*/
 $show_complete_tasks = rand(0, 1);
 
-/* считает часы до даты */
+/**
+ * Cчитает часы до даты
+ *
+ * @param $date - дата завершения задачи в формате TIMESTAMP
+ *
+ * @return bool
+ */
 function is_date_important($date)
 {
     $date_ts = strtotime($date);
@@ -15,8 +21,17 @@ function is_date_important($date)
     $hours = floor($dt_diff / $seconds_in_hour);
     return $hours <= 24 && $hours > 0;
 }
-
-/* получает массив задач и SQL-запрос для отображения списка задач у текущего пользователя */
+/**
+ * Получает массив задач и SQL-запрос для отображения списка задач у текущего пользователя
+ *
+ * @param $connect - подключение к БД
+ * @param $user_id - id пользователя
+ * @param $project_id - id проекта
+ * @param $filter - выбранный фильтр пользователем
+ * @param $show_completed - статус задачи
+ *
+ * @return array
+ */
 function getTasks($connect, $user_id, $project_id = null, $filter = null, $show_completed = null)
 {
     $user_id = mysqli_real_escape_string($connect, $user_id);
@@ -45,11 +60,17 @@ function getTasks($connect, $user_id, $project_id = null, $filter = null, $show_
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
-
-/* получает массив проектов и SQL-запрос для отображения списка проектов у текущего пользователя */
+/**
+ * Получает массив проектов и SQL-запрос для отображения списка проектов у текущего пользователя
+ *
+ * @param $connect - подключение к БД
+ * @param $user_id - id пользователя
+ *
+ * @return array
+ */
 function getProjects($connect, $user_id)
 {
-    /* экранируем, чтобы не было иньекций*/
+    /* экранирует, чтобы не было SQL-иньекций*/
     $user_id = mysqli_real_escape_string($connect, $user_id);
     $sql = 'SELECT p.id, p.name, COUNT(t.id) as projects_count, t.project_id FROM project p
             LEFT JOIN task t on p.id = t.project_id
@@ -62,8 +83,13 @@ function getProjects($connect, $user_id)
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
-
-/* выделяет активный проект*/
+/**
+ * Выделяет активный проект
+ *
+ * @param $project_id - id проекта
+ *
+ * @return string
+ */
 function getProjectsMenuActiveItemClass($project_id)
 {
     if (isset($_GET['project_id']) && $_GET['project_id'] === $project_id) {
@@ -71,8 +97,15 @@ function getProjectsMenuActiveItemClass($project_id)
     }
     return '';
 }
-
-/* подключает not_found.php*/
+/**
+ * Подключает not_found.php
+ *
+ * @param $user_name - массив с данными о пользователе
+ * @param $projects - массив с проектами
+ * @param $show_complete_tasks - отображение задач
+ *
+ * @return string
+ */
 function print404Page($user_name, $projects, $show_complete_tasks)
 {
     http_response_code(404);
@@ -93,8 +126,13 @@ function print404Page($user_name, $projects, $show_complete_tasks)
 
     exit();
 }
-
-/* проверяет совпадает ли категория проекта с полем project*/
+/**
+ * Проверяет совпадает ли категория проекта с полем project
+ *
+ * @param $projects - массив с проектами
+ *
+ * @return array
+ */
 function validateCategory($project, $allowed_list)
 {
     $id = $_POST[$project];
@@ -109,8 +147,13 @@ function validateCategory($project, $allowed_list)
 
     return null;
 }
-
-/* проверяет длину строки поля name*/
+/**
+ * Проверяет длину строки поля name
+ *
+ * @param $name - массив с названием проекта
+ *
+ * @return array
+ */
 function validateLength($name, $min, $max)
 {
     $len = strlen($_POST[$name]);
@@ -125,8 +168,14 @@ function validateLength($name, $min, $max)
 
     return null;
 }
-
-/* проверяет, чтобы названия проктов были разными для user*/
+/**
+ * Проверяет, чтобы названия проктов были разными для user
+ *
+ * @param $connect - подключение к БД
+ * @param $user_id - id пользователя
+ *
+ * @return array
+ */
 function validateProjectExists($connect, $user_id, $project_key)
 {
     $project_name = $_POST[$project_key] ?? null;
@@ -144,9 +193,16 @@ function validateProjectExists($connect, $user_id, $project_key)
 
     return null;
 }
-
-/* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
-если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
+/**
+ * Проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
+ * если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу
+ *
+ * @param $errors - массив с ошибками
+ * @param $connect - подключение к БД
+ * @param $user_id - id пользователя
+ *
+ * @return array
+ */
 function saveTaskAndRedirect($errors, $connect, $user_id, $task)
 {
     if (count($errors) === 0) {
@@ -163,9 +219,16 @@ function saveTaskAndRedirect($errors, $connect, $user_id, $task)
         }
     }
 }
-
-/* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
-если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу*/
+/**
+ * Проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
+ * если ошибок нет добавляем задачу в бд и делаем редирект на главную страницу
+ *
+ * @param $errors - массив с ошибками
+ * @param $connect - подключение к БД
+ * @param $user_id - id пользователя
+ *
+ * @return array
+ */
 function saveProjectAndRedirect($errors, $connect, $user_id, $project)
 {
     if (count($errors) === 0) {
@@ -182,9 +245,16 @@ function saveProjectAndRedirect($errors, $connect, $user_id, $project)
         }
     }
 }
-
-/* проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
-если ошибок нет добавляем user в бд и делаем редирект на главную страницу*/
+/**
+ * Проверяет массив с ошибками, если он не пустой значит показывает их пользователю,
+ * если ошибок нет добавляем user в бд и делаем редирект на главную страницу
+ *
+ * @param $errors - массив с ошибками
+ * @param $connect - подключение к БД
+ * @param $user - id пользователя
+ *
+ * @return array
+ */
 function saveUserAndRedirect($errors, $connect, $user)
 {
     if (count($errors) === 0) {
@@ -203,8 +273,14 @@ function saveUserAndRedirect($errors, $connect, $user)
         }
     }
 }
-
-/* получает данные user*/
+/**
+ * Получает данные пользователя
+ *
+ * @param $connect - подключение к БД
+ * @param $user - id пользователя
+ *
+ * @return array
+ */
 function getUser($connect, $user)
 {
     $email = mysqli_real_escape_string($connect, $user['email']);
@@ -212,13 +288,18 @@ function getUser($connect, $user)
     $result = mysqli_query($connect, $sql);
     return $result;
 }
-
-/* проверяет дату в форме*/
+/**
+ * Валидация даты
+ *
+ * @param $date - дата завершения задачи
+ *
+ * @return array
+ */
 function validateDate($date)
 {
     $date = $_POST['date'];
     /* проверяет дату, если она заполнена*/
-    if (isset($date)) {
+    if (!empty($date)) {
         $currentDate = date('Y-m-d');
         /* проверяет формат даты с помощью функции is_date_valid в helpers*/
         if (!is_date_valid($date)) {
@@ -231,8 +312,13 @@ function validateDate($date)
     }
     return null;
 }
-
-/* добавляет фильтры*/
+/**
+ * Добавляет фильтры
+ *
+ * @param $filterName - название фильтра
+ *
+ * @return array
+ */
 function buildFilterLinkUrl($filterName)
 {
     $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
@@ -241,8 +327,13 @@ function buildFilterLinkUrl($filterName)
 
     return http_build_query($data);
 }
-
-/* добавляет фильтр для проектов*/
+/**
+ * Добавляет фильтр для проектов
+ *
+ * @param $projectName - название проекта
+ *
+ * @return array
+ */
 function buildProjectLinkUrl($projectName)
 {
     $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);

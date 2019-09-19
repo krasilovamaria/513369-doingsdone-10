@@ -6,7 +6,7 @@
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
             <input class="form__input
-            <?php if (isset($errors['name'])) : ?> form__input--error <?php endif /* добавляет класс form__input--error если поле пустое*/ ?>" type="text" name="name" id="name" value="" placeholder="Введите название">
+            <?php if (isset($errors['name'])) : ?> form__input--error <?php endif /* добавляет класс form__input--error если поле пустое*/ ?>" type="text" name="name" id="name" value="<?= $_POST['name'] ?? "" ?>" placeholder="Введите название">
             <?php if (isset($errors['name'])) : ?><p class="form__message"><?= $errors['name'] ?></p><?php endif /* добавляет в контейнер поля новый тег p.form__message*/ ?>
         </div>
 
@@ -33,7 +33,7 @@
             <label class="form__label" for="file">Файл</label>
 
             <div class="form__input-file">
-                <input class="visually-hidden" type="file" name="file" id="file" value="">
+                <input class="visually-hidden" type="file" name="file" id="file" value="<?= $_POST['file'] ?? "" ?>">
 
                 <label class="button button--transparent" for="file">
                     <span>Выберите файл</span>
